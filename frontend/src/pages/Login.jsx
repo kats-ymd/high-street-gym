@@ -1,5 +1,5 @@
 import Header from "../components/Header"
-import Nav from "../components/Nav"
+// import Nav from "../components/Nav"
 import Footer from "../components/Footer"
 import { Link } from "react-router-dom"
 
