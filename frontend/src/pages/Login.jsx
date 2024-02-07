@@ -1,13 +1,13 @@
-import Header from "../components/Header"
+// import Header from "../components/Header"
 // import Nav from "../components/Nav"
-import Footer from "../components/Footer"
+// import Footer from "../components/Footer"
 import { Link } from "react-router-dom"
 
 function Login() {
     return <>
         <div className="mx-auto">
-            <Header />
-            <div className="w-5/6">
+            {/* <Header /> */}
+            <div>
                 <img src="https://picsum.photos/100/100" alt="logo image placeholder" className="my-4 mx-auto rotate-45" />
                 <h1>This is the login page!</h1>
                 <form className="flex flex-col gap-y-2">
@@ -19,7 +19,7 @@ function Login() {
                     </div>
                 </form>
             </div>
-            <Footer />
+            {/* <Footer /> */}
         </div>
     </>
 }
