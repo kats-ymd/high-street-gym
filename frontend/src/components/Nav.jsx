@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import timetable from "../assets/img/iconmonstr-calendar-4.svg"
 import bookings from "../assets/img/iconmonstr-list-lined.svg"
+import blog from "../assets/img/iconmonstr-script-5.svg"
 import profile from "../assets/img/iconmonstr-user-circle-thin.svg"
 import upload from "../assets/img/iconmonstr-upload-18.svg"
 import logout from "../assets/img/iconmonstr-log-out-16.svg"
@@ -16,7 +17,7 @@ function Nav() {
             <span className="btm-nav-label text-xs text-center">Bookings</span>
         </Link>
         <Link to="/blog">
-
+            <img src={blog} alt="blog icon" className="h-5 w-5" />
             <span className="btm-nav-label text-xs text-center">Blog</span>
         </Link>
         <Link to="/profile" className="active">
