@@ -8,7 +8,7 @@ import logout from "../assets/img/iconmonstr-log-out-16.svg"
 
 function Nav() {
     return <nav className="btm-nav">
-        <Link to="/timetable">
+        <Link to="/timetable" className="active">
             <img src={timetable} alt="timetable icon" className="h-5 w-5" />
             <span className="btm-nav-label text-xs text-center">Timetable</span>
         </Link>
@@ -20,11 +20,11 @@ function Nav() {
             <img src={blog} alt="blog icon" className="h-5 w-5" />
             <span className="btm-nav-label text-xs text-center">Blog</span>
         </Link>
-        <Link to="/profile" className="active">
+        <Link to="/profile">
             <img src={profile} alt="person torso icon" className="h-5 w-5" />
             <span className="btm-nav-label text-xs text-center">Profile</span>
         </Link>
-        <Link to="/import">
+        <Link to="/import" className="disabled">
             <img src={upload} alt="file uploading icon" className="h-5 w-5" />
             <span className="btm-nav-label text-xs text-center">XML Import</span>
         </Link>
