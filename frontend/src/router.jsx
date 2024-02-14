@@ -7,7 +7,7 @@ import Signup from "./pages/Signup"
 import CreateBooking from "./pages/CreateBooking"
 import ViewBookings from "./pages/ViewBookings"
 import Profile from "./pages/Profile"
-import CommonArea from "./pages/CommonArea"
+import CommonArea from "./components/CommonArea"
 
 // nested routing for using <Outlet />
 const router = createBrowserRouter(
