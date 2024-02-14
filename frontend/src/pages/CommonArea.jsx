@@ -10,15 +10,13 @@ function CommonArea () {
     // setIsLoggedIn(false)    // test code
     
     return <>
-        <div className="mx-auto">
-            <Header />
-            <div>
-                <Outlet />
-            </div>
-            {/* <Nav /> */}
-            {/* <Footer /> */}
-            { isLoggedIn ? <Nav /> : <Footer /> }
+        <Header />
+        <div>
+            <Outlet />
         </div>
+        {/* <Nav /> */}
+        {/* <Footer /> */}
+        { isLoggedIn ? <Nav /> : <Footer /> }
     </>
 }
 

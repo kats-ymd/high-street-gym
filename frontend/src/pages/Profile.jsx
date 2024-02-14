@@ -5,7 +5,6 @@ import { Link } from "react-router-dom"
 
 function Profile () {
     return <>
-    <div className="mx-auto">
         {/* <Header /> */}
         <div>
             <img src="https://picsum.photos/100/100" alt="logo image placeholder" className="my-4 mx-auto rotate-45" />
@@ -25,8 +24,7 @@ function Profile () {
         </div>
         {/* <Nav /> */}
         {/* <Footer /> */}
-    </div>
-</>
+    </>
 }
 
 export default Profile

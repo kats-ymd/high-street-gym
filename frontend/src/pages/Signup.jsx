@@ -5,7 +5,6 @@ import { Link } from "react-router-dom"
 
 function Signup () {
     return <>
-    <div className="mx-auto">
         {/* <Header /> */}
         <div>
             <img src="https://picsum.photos/100/100" alt="logo image placeholder" className="my-4 mx-auto rotate-45" />
@@ -24,8 +23,7 @@ function Signup () {
             </form>
         </div>
         {/* <Footer /> */}
-    </div>
-</>
+    </>
 }
 
 export default Signup

@@ -5,14 +5,12 @@
 
 function Blog () {
     return <>
-        <div className="mx-auto">
-            {/* <Header /> */}
-            <div>
-                <h1>This is the mini blog page!</h1>
-            </div>
-            {/* <Nav /> */}
-            {/* <Footer /> */}
+        {/* <Header /> */}
+        <div>
+            <h1>This is the mini blog page!</h1>
         </div>
+        {/* <Nav /> */}
+        {/* <Footer /> */}
     </>
 }
 
