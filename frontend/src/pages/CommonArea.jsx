@@ -6,6 +6,8 @@ import { useState } from "react"
 
 function CommonArea () {
     const [isLoggedIn, setIsLoggedIn] = useState(true)
+
+    // setIsLoggedIn(false)    // test code
     
     return <>
         <div className="mx-auto">

@@ -15,7 +15,7 @@ const router = createBrowserRouter(
         <Route>
             <Route path='/' element={<CommonArea />}>
                 <Route path='' element={<Login />}></Route>
-                <Route path='/signup' element={<Signup />}></Route>
+                <Route path='signup' element={<Signup />}></Route>
                 <Route path='timetable' element={<Timetable />}></Route>
                 <Route path='bookings' element={<ViewBookings />}></Route>
                 <Route path='createBooking' element={<CreateBooking />}></Route>
@@ -27,7 +27,7 @@ const router = createBrowserRouter(
     )
 )
 
-// routing explained in class / reference project
+// // routing explained in class / reference project
 // const router = createBrowserRouter([
 //     {
 //         path: "/",

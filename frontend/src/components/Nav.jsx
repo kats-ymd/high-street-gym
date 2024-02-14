@@ -1,4 +1,4 @@
-import NavLink from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import timetable from "../assets/img/iconmonstr-calendar-4.svg"
 import bookings from "../assets/img/iconmonstr-list-lined.svg"
 import blog from "../assets/img/iconmonstr-script-5.svg"
