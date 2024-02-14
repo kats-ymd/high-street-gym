@@ -1,12 +1,12 @@
-import Header from "../components/Header"
-import Nav from "../components/Nav"
-import Footer from "../components/Footer"
+// import Header from "../components/Header"
+// import Nav from "../components/Nav"
+// import Footer from "../components/Footer"
 import { Link } from "react-router-dom"
 
 function Timetable () {
     return <>
         <div className="mx-auto">
-            <Header />
+            {/* <Header /> */}
             <div className="w-11/12 flex flex-col">
                 <h1>This is the Timetable page!</h1>
                 <span className="border border-black">Monday</span>
@@ -77,8 +77,8 @@ function Timetable () {
                 <span className="border border-black">Saturday</span>
                 <span className="border border-black">Sunday</span>
             </div>
-            <Nav />
-            <Footer />
+            {/* <Nav /> */}
+            {/* <Footer /> */}
         </div>
     </>
 }
