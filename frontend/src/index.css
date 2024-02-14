@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+body, nav {
     max-width: 500px;
     margin: 0 auto;
 }
