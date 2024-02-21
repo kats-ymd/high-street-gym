@@ -2,12 +2,13 @@
 // import Nav from "../components/Nav"
 // import Footer from "../components/Footer"
 import { Link } from "react-router-dom"
+import profile from "../assets/img/iconmonstr-user-circle-thin.svg"
 
 function Signup () {
     return <>
         {/* <Header /> */}
         <div>
-            <img src="https://picsum.photos/100/100" alt="logo image placeholder" className="my-4 mx-auto rotate-45" />
+            <img src={profile} alt="person image placeholder" className="w-40 my-4 mx-auto" />
             <h1>This is the user signup page!</h1>
             <form className="flex flex-col gap-y-2">
                 <input type="text" placeholder="First Name" className="input input-bordered" />

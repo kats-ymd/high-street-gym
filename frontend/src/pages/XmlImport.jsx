@@ -2,12 +2,13 @@
 // import Nav from "../components/Nav"
 // import Footer from "../components/Footer"
 import { Link } from "react-router-dom"
+import upload from "../assets/img/iconmonstr-upload-18.svg"
 
 function XmlImport () {
     return <>
         {/* <Header /> */}
         <div>
-            <img src="https://picsum.photos/100/100" alt="upload icon placeholder" className="my-4 mx-auto rotate-45" />
+            <img src={upload} alt="upload to cloud icon" className="w-40 my-4 mx-auto" />
             <h1>This is the XML Import page!</h1>
             <form className="flex flex-col gap-y-2">
                 <select className="select select-bordered">
