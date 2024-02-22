@@ -1,6 +1,19 @@
 function Header() {
-    return <header className="bg-red-600 font-bold text-2xl text-white">
-        <span className="">High Street Gym</span>
+    return <header 
+        className="
+            h-16 
+            bg-rose-600 
+            text-center 
+            text-4xl"
+    >
+        <span 
+            className="
+                align-middle 
+                font-bold 
+                text-white"
+        >
+            High Street Gym
+        </span>
     </header>
 }
 
