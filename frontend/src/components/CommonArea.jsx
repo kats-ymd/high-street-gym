@@ -11,7 +11,7 @@ function CommonArea () {
     
     return <>
         <Header />
-        <div>
+        <div className="pb-16"> {/* bottom padding to avoid main content from overlapping with bottom nav bar */}
             <Outlet />
         </div>
         {/* <Nav /> */}
