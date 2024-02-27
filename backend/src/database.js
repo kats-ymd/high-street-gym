@@ -5,4 +5,6 @@ export const db = mysql.createPool({
     user: "root",
     password: "root",
     database: "high-street-gym"
+
+    // TODO: Revise above using .env file
 })
