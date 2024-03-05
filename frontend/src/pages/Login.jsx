@@ -1,7 +1,4 @@
-// import Header from "../components/Header"
-// import Nav from "../components/Nav"
-// import Footer from "../components/Footer"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuthentication } from "../hooks/authentication"
 import logo from "../assets/img/hs-high-resolution-logo-transparent.svg"
@@ -38,7 +35,6 @@ function Login() {
     }
 
     return <>
-        {/* <Header /> */}
         <div>
             <img src={logo} alt="logo image" className="w-40 my-4 mx-auto" />
             <h1>This is the login page!</h1>
@@ -61,10 +57,83 @@ function Login() {
                     <button className="btn">Login</button>
                     <Link to="/signup" className="btn btn-ghost">Signup</Link>
                 </div>
-                <span>{statusMessage}</span>
+                <span className="text-red-600">{statusMessage}</span>
+
+                <div className="bg-pink-200 rounded-2xl mt-8">
+                    {/* This section is included for debugging and development purposes */}
+                    <h2>DEV ONLY - Quick Login</h2>
+                    <table className="table table-compact w-full">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>email</th>
+                                <th>password</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>admin</td>
+                                <td>admin@trials.net</td>
+                                <td>abc123</td>
+                                <td>
+                                    <button
+                                        className="btn btn-xs btn-primary"
+                                        onClick={() => {
+                                            login("admin@trials.net", "abc123")
+                                                .then(result => {
+                                                    setStatusMessage("Login successful!")
+                                                    navigate("/bookings")
+                                                })
+                                                .catch(error => {
+                                                    setStatusMessage("Login failed: " + error)
+                                                })
+                                        }}>Login</button>
+                                </td>
+                            </tr>
+                            {/* <tr>
+                                <td>moderator</td>
+                                <td>mod@srv.com</td>
+                                <td>abc123</td>
+                                <td>
+                                    <button
+                                        className="btn btn-xs btn-primary"
+                                        onClick={() => {
+                                            login("mod@srv.com", "abc123")
+                                                .then(result => {
+                                                    setStatusMessage("Login successful!")
+                                                    navigate("/dashboard")
+                                                })
+                                                .catch(error => {
+                                                    setStatusMessage("Login failed: " + error)
+                                                })
+                                        }}>Login</button>
+                                </td>
+                            </tr> */}
+                            {/* <tr>
+                                <td>spotter</td>
+                                <td>spot@srv.com</td>
+                                <td>abc123</td>
+                                <td>
+                                    <button
+                                        className="btn btn-xs btn-primary"
+                                        onClick={() => {
+                                            login("spot@srv.com", "abc123")
+                                                .then(result => {
+                                                    setStatusMessage("Login successful!")
+                                                    navigate("/dashboard")
+                                                })
+                                                .catch(error => {
+                                                    setStatusMessage("Login failed: " + error)
+                                                })
+                                        }}>Login</button>
+                                </td>
+                            </tr> */}
+                        </tbody>
+                    </table>
+                </div>
             </form>
         </div>
-        {/* <Footer /> */}
     </>
 }
 
