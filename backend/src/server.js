@@ -4,7 +4,7 @@ import fileUpload from "express-fileupload"
 // import animalController from "./controllers/animals.js"
 // import sightingController from "./controllers/sightings.js"
 // import trailController from "./controllers/trails.js"
-// import userController from "./controllers/users.js"
+import userController from "./controllers/users.js"
 
 // Create express application
 const port = 8080
@@ -33,7 +33,7 @@ app.use(fileUpload({
 
 // // Import and use the route defined by controller.
 // app.use("/animals", animalController)
-// app.use("/users", userController)
+app.use("/users", userController)
 // app.use("/trails", trailController)
 // app.use("/sightings", sightingController)
 
