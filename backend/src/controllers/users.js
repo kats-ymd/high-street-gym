@@ -1,5 +1,5 @@
 import { Router } from "express";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcrypt" // reference project uses import from "bcryptjs" and causing error
 import { v4 as uuid4 } from "uuid"
 import * as Users from "../models/users.js";
 import auth from "../middleware/auth.js";
@@ -14,9 +14,13 @@ userController.post("/login", (req, res) => {
 
     // TODO: Implement request validation
 
+    console.log(loginData)
+
     Users.getByEmail(loginData.email)
         .then(user => {
-            if (bcrypt.compareSync(loginData.password, user.password)) {
+            // if (bcrypt.compareSync(loginData.password, user.password)) {
+            if (loginData.password == user.password) {
+
                 user.authenticationKey = uuid4().toString()
 
                 Users.update(user).then(result => {
