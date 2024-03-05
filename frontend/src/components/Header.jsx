@@ -2,7 +2,7 @@ function Header() {
     return <header 
         className="
             h-16 
-            bg-rose-600 
+            bg-base-300
             text-center 
             text-4xl"
     >
@@ -10,7 +10,7 @@ function Header() {
             className="
                 align-middle 
                 font-bold 
-                text-white"
+                text-red-600"
         >
             High Street Gym
         </span>
