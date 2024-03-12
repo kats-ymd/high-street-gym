@@ -10,8 +10,8 @@ export function newUser(
     phone,
     address,
     authenticationKey,
-    lastModifiedBy,
-    lastModifiedAt,
+    createdAt,
+    updatedAt,
 ) {
     return {
         id,
@@ -23,8 +23,8 @@ export function newUser(
         phone,
         address,
         authenticationKey,
-        lastModifiedBy,
-        lastModifiedAt,
+        createdAt,
+        updatedAt,
     }
 }
 
@@ -44,8 +44,8 @@ export async function getAll() {
             userResult.phone,
             userResult.address,
             userResult.authentication_key,
-            userResult.last_modified_by,
-            userResult.last_modified_at,
+            userResult.created_at,
+            userResult.updated_at,
         ))
 }
 
@@ -67,8 +67,8 @@ export async function getByID(userID) {
                 userResult.phone,
                 userResult.address,
                 userResult.authentication_key,
-                userResult.last_modified_by,
-                userResult.last_modified_at,
+                userResult.created_at,
+                userResult.updated_at,
             )
         )
     } else {
@@ -94,8 +94,8 @@ export async function getByEmail(email) {
                 userResult.phone,
                 userResult.address,
                 userResult.authentication_key,
-                userResult.last_modified_by,
-                userResult.last_modified_at,
+                userResult.created_at,
+                userResult.updated_at,
             )
         )
     } else {
@@ -122,8 +122,8 @@ export async function getByAuthenticationKey(authenticationKey) {
                 userResult.phone,
                 userResult.address,
                 userResult.authentication_key,
-                userResult.last_modified_by,
-                userResult.last_modified_at,
+                userResult.created_at,
+                userResult.updated_at,
             )
         )
     } else {
@@ -138,7 +138,7 @@ export async function create(user) {
         "INSERT INTO users "
         + "(email, password, role, first_name, last_name, "
         + "phone, address, authentication_key, "
-        + "last_modified_by, last_modified_at) "
+        + "created_at, updated_at) "
         + "VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
             user.email,
@@ -149,8 +149,8 @@ export async function create(user) {
             user.phone,
             user.address,
             user.authenticationKey,
-            user.lastModifiedBy,
-            user.lastModifiedAt,
+            user.createdAt,
+            user.updatedAt,
         ]
     ).then(([result]) => {
         return { ...user, id: result.insertId }
@@ -168,8 +168,8 @@ export async function update(user) {
         + "phone = ?, "
         + "address = ?, "
         + "authentication_key = ?, "
-        + "last_modified_by = ?, "
-        + "last_modified_at = ? "
+        + "created_at = ?, "
+        + "updated_at = ? "
         + "WHERE id = ?",
         [
             user.email,
@@ -180,8 +180,8 @@ export async function update(user) {
             user.phone,
             user.address,
             user.authenticationKey,
-            user.lastModifiedBy,
-            user.lastModifiedAt,
+            user.createdAt,
+            user.updatedAt,
             user.id
         ]
     ).then(([result]) => {
@@ -205,15 +205,15 @@ export async function deleteByID(userID) {
 
 // const user = newUser(
 //     null,
-//     "admin@trials.net",
+//     "customer@trials.net",
 //     "abc123",
-//     "admin",
-//     "Tim",
-//     "Horton",
-//     "0400-123-456",
-//     "1234 ABC street, Brisbane, 4001",
+//     "customer",
+//     "Michael",
+//     "Westen",
+//     "0422-654-321",
+//     "987 GHI Road, Brisbane, 4001",
 //     null,
-//     null,
+//     new Date(),
 //     null,
 //     )
 // create(user).then(result => console.log(result))
@@ -228,15 +228,15 @@ export async function deleteByID(userID) {
 //     "0400-123-456",
 //     "1234 ABC street, Brisbane, 4001",
 //     null,
-//     null,
-//     null,
+//     "2024-03-12 11:52:06",
+//     new Date(),
 //     )
 // console.log(user)
 // update(user).then(result => console.log(result))
 
 // getAll().then(result => console.log(result))
-// getByID(1).then(result => console.log(result))
-// getByEmail('admin@trials.net').then(result => console.log(result))
+// getByID(2).then(result => console.log(result))
+// getByEmail('trainer@trials.net').then(result => console.log(result))
 // getByAuthenticationKey('').then(result => console.log(result))
 
 // TODO: Test delete function
