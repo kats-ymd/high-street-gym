@@ -91,44 +91,44 @@ function Login() {
                                         }}>Login</button>
                                 </td>
                             </tr>
-                            {/* <tr>
-                                <td>moderator</td>
-                                <td>mod@srv.com</td>
+                            <tr>
+                                <td>trainer</td>
+                                <td>trainer@trials.net</td>
                                 <td>abc123</td>
                                 <td>
                                     <button
                                         className="btn btn-xs btn-primary"
                                         onClick={() => {
-                                            login("mod@srv.com", "abc123")
+                                            login("trainer@trials.net", "abc123")
                                                 .then(result => {
                                                     setStatusMessage("Login successful!")
-                                                    navigate("/dashboard")
+                                                    navigate("/bookings")
                                                 })
                                                 .catch(error => {
                                                     setStatusMessage("Login failed: " + error)
                                                 })
                                         }}>Login</button>
                                 </td>
-                            </tr> */}
-                            {/* <tr>
-                                <td>spotter</td>
-                                <td>spot@srv.com</td>
+                            </tr>
+                            <tr>
+                                <td>customer</td>
+                                <td>customer@trials.net</td>
                                 <td>abc123</td>
                                 <td>
                                     <button
                                         className="btn btn-xs btn-primary"
                                         onClick={() => {
-                                            login("spot@srv.com", "abc123")
+                                            login("customer@trials.net", "abc123")
                                                 .then(result => {
                                                     setStatusMessage("Login successful!")
-                                                    navigate("/dashboard")
+                                                    navigate("/bookings")
                                                 })
                                                 .catch(error => {
                                                     setStatusMessage("Login failed: " + error)
                                                 })
                                         }}>Login</button>
                                 </td>
-                            </tr> */}
+                            </tr>
                         </tbody>
                     </table>
                 </div>
