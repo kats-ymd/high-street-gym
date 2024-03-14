@@ -3,16 +3,20 @@ import * as dotenv from "dotenv"
 dotenv.config()
 
 export const db = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "root",
-    database: "high-street-gym"
+    // host: "localhost",
+    // user: "root",
+    // password: "root",
+    // database: "high-street-gym"
 
-    // // TODO: Revise above using .env file
-    // // Below code worked for testing model function individually,
-    // // but did not work for actual api call...
-    // host: process.env.DB_HOST,
-    // user: process.env.DB_USER,
-    // password: process.env.DB_PASSWORD,
-    // database: process.env.DB_DATABASE
+    // if .env file is placed under app root folder,
+    // it works for app but does not work for model function only test
+    // if placed under backend folder,
+    // it works for model function only test but does not for app
+    //
+    // TODO: Investigate the difference
+
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
 })
