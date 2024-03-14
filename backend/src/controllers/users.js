@@ -76,7 +76,7 @@ userController.get("/", auth(["admin"]), async (req, res) => {
     })
 })
 
-userController.get("/:id", auth(["admin", "moderator", "spotter"]), (req, res) => {
+userController.get("/:id", auth(["admin", "trainer", "customer"]), (req, res) => {
     const userID = req.params.id
 
     // TODO: Implement request validation
@@ -187,7 +187,7 @@ userController.post("/register", (req, res) => {
     })
 })
 
-userController.patch("/:id", auth(["admin", "moderator", "spotter"]), async (req, res) => {
+userController.patch("/:id", auth(["admin", "trainer", "customer"]), async (req, res) => {
     // Get the user data out of the request
     //
     // Note - the user data being updated is encapsulated in a user
