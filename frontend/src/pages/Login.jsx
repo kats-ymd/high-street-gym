@@ -19,7 +19,7 @@ function Login() {
         e.preventDefault()
         setStatusMessage("Logging in...")
 
-        if (!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$/.test(formData.email)) {
+        if (!/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$/.test(formData.email)) {
             setStatusMessage("Invalid email address")
             return
         }
