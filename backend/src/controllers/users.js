@@ -5,6 +5,7 @@ import * as Users from "../models/users.js";
 import auth from "../middleware/auth.js";
 
 // TODO: Implement input validation
+// TODO: Implement input sanitization
 
 const userController = Router()
 
@@ -14,7 +15,7 @@ userController.post("/login", (req, res) => {
 
     // TODO: Implement request validation
 
-    console.log(loginData)
+    // console.log(loginData)
 
     Users.getByEmail(loginData.email)
         .then(user => {
@@ -82,7 +83,7 @@ userController.get("/:id", auth(["admin", "trainer", "customer"]), (req, res) =>
     // TODO: Implement request validation
 
     // TODO: Enforce that moderator and spotter users
-    // can only get them selves. 
+    // can only get them selves.
 
     Users.getByID(userID).then(user => {
         res.status(200).json({
@@ -158,7 +159,7 @@ userController.post("/register", (req, res) => {
 
     // TODO: Implement request validation
 
-    // hash the password 
+    // hash the password
     userData.password = bcrypt.hashSync(userData.password);
 
     // Convert the user data into an User model object
