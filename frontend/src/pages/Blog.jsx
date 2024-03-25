@@ -4,17 +4,27 @@
 // import { Link } from "react-router-dom"
 
 function Blog () {
+
+    // TODO: (optional) Implement "like" feature
+    //
+    // Reference:
+    // MySQLでいいね！（LIKE）機能のDB設計をしてみた！
+    // https://hit.hateblo.jp/entry/mysql/iine
+
+    // TODO: (optional) Implement "comment" feature
+    //
+
     return <>
         {/* <Header /> */}
         {/* <div>
             <h1>This is the mini blog page!</h1>
         </div> */}
 
-        {/* 
+        {/*
             following twitter-like tailwind component referenced from here:
-            https://tailwindcomponents.com/component/twitter-clone 
+            https://tailwindcomponents.com/component/twitter-clone
         */}
-        
+
         {/* <!--middle wall--> */}
 
         <div className="flex">
