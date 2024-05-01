@@ -1,6 +1,7 @@
 import { Router } from "express";
 import bcrypt from "bcrypt" // reference project uses import from "bcryptjs" and causing error
 import { v4 as uuid4 } from "uuid"
+import xml2js from "xml2js"
 import * as Users from "../models/users.js";
 import auth from "../middleware/auth.js";
 
@@ -258,6 +259,105 @@ userController.patch("/:id", auth(["admin", "trainer", "customer"]), async (req,
             message: "Failed to update user",
         })
     })
+})
+
+userController.post("/upload-xml", auth(["admin", "trainer"]), (req, res) => {
+    if (req.files && req.files["xml-file"]) {
+        // Access the XML file as a string
+        const XMLFile = req.files["xml-file"]
+        const file_text = XMLFile.data.toString()
+
+        // Set up XML parser
+        const parser = new xml2js.Parser();
+        parser.parseStringPromise(file_text)
+            .then(data => {
+                const userUpload = data["upload-users"]
+                const userUploadAttributes = userUpload["$"]
+                const operation = userUploadAttributes["operation"]
+                // Slightly painful indexing to reach nested children
+                const usersData = userUpload["users"][0]["user"]
+
+                if (operation == "insert") {
+                    Promise.all(usersData.map((userData) => {
+                        // Convert the xml object into a model object
+                        const userModel = Users.newUser(
+                            null,
+                            userData.email.toString(),
+                            bcrypt.hashSync(userData.password.toString(), 10),
+                            userData.role.toString(),
+                            userData["first-name"].toString(),
+                            userData["last-name"].toString(),
+                            userData.phone.toString(),
+                            userData.address.toString(),
+                            null,
+                        )
+
+                        // Return the promise of each creation query
+                        return Users.create(userModel)
+
+                    })).then(results => {
+                        res.status(200).json({
+                            status: 200,
+                            message: "XML Upload insert successful",
+                        })
+                    }).catch(error => {
+                        res.status(500).json({
+                            status: 500,
+                            message: "XML upload failed on database operation - " + error,
+                        })
+                    })
+
+                } else if (operation == "update") {
+                    Promise.all(usersData.map((userData) => {
+                        // Convert the xml object into a model object
+                        const userModel = Users.newUser(
+                            userData.id.toString(),
+                            userData.email.toString(),
+                            bcrypt.hashSync(userData.password.toString(), 10),
+                            userData.role.toString(),
+                            userData["first-name"].toString(),
+                            userData["last-name"].toString(),
+                            userData.phone.toString(),
+                            userData.address.toString(),
+                            null,
+                        )
+
+                        // Return the promise of each creation query
+                        return Users.update(userModel)
+
+                    })).then(results => {
+                        res.status(200).json({
+                            status: 200,
+                            message: "XML Upload update successful",
+                        })
+                    }).catch(error => {
+                        res.status(500).json({
+                            status: 500,
+                            message: "XML upload failed on database operation - " + error,
+                        })
+                    })
+
+                } else {
+                    res.status(400).json({
+                        status: 400,
+                        message: "XML Contains invalid operation attribute value",
+                    })
+                }
+            })
+            .catch(error => {
+                res.status(500).json({
+                    status: 500,
+                    message: "Error parsing XML - " + error,
+                })
+            })
+
+
+    } else {
+        res.status(400).json({
+            status: 400,
+            message: "No file selected",
+        })
+    }
 })
 
 userController.delete("/:id", auth(["admin"]), (req, res) => {
