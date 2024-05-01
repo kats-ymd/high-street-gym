@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import * as Users from "../api/users"
 import { useAuthentication } from "../hooks/authentication"
 import profile from "../assets/img/iconmonstr-user-circle-thin.svg"
 
 function Profile ({ userID, onSave, allowEditRole }) {
+    const navigate = useNavigate()
+
     const [user, , , refresh] = useAuthentication()
 
     // Load the logged in user's data in the input fields
@@ -51,7 +53,7 @@ function Profile ({ userID, onSave, allowEditRole }) {
                 }
 
                 // If the user is updating them self then we should refresh
-                // their local data from the server. (this shows the effects 
+                // their local data from the server. (this shows the effects
                 // of the change in places like the navigation bar without a page reload)
                 if (formData.id == user.id) {
                     refresh();
@@ -121,15 +123,22 @@ function Profile ({ userID, onSave, allowEditRole }) {
                     onChange={(e) => setFormData(existing => { return { ...existing, email: e.target.value } })}
                 />
                 <input
-                    type="text"
+                    type="password"
                     placeholder="Password"
                     className="input input-bordered"
                     value={formData.password}
                     onChange={(e) => setFormData(existing => { return { ...existing, password: e.target.value } })}
                 />
+                {/* TODO: showing hashed password may be NG, if "update" again, the saved password would be changed unexpectedly */}
                 <div>
-                    <button className="btn">Save</button>
-                    <Link to="/" className="btn btn-ghost">Cancel</Link>
+                    <input
+                        type="button"
+                        value={formData.id ? "Update" : "Insert"}
+                        onClick={() => upsert()}
+                        className="btn btn-primary mr-2"
+                    />
+                    <button onClick={() => navigate("/bookings")} className="btn btn-ghost">Cancel</button>
+                    {/* TODO: maybe change function to go back to the previous page instead of bookings page */}
                 </div>
                 <label className="label">
                     <span className="label-text-alt">{statusMessage}</span>
