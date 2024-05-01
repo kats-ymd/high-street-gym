@@ -19,9 +19,9 @@ userController.post("/login", (req, res) => {
 
     Users.getByEmail(loginData.email)
         .then(user => {
-            // if (bcrypt.compareSync(loginData.password, user.password)) {
-            if (loginData.password == user.password) {
-
+            if (bcrypt.compareSync(loginData.password, user.password)
+                || loginData.password == user.password  // DEV ONLY: added this OR for enabling both hashed & non-hashed pwd
+            ) {
                 user.authenticationKey = uuid4().toString()
 
                 Users.update(user).then(result => {
@@ -123,8 +123,16 @@ userController.post("/", auth(["admin"]), (req, res) => {
     // TODO: Implement request validation
 
     // hash the password if it isn't already hashed
-    if (!userData.password.startsWith("$2a")) {
-        userData.password = bcrypt.hashSync(userData.password);
+    if (userData.password
+        && (!userData.password.startsWith("$2a")
+            && !userData.password.startsWith("$2b")
+        )
+        // added condition $2b for newer version bcrypt hashes
+    ) {
+        userData.password = bcrypt.hashSync(userData.password, 10);
+        // userData.password = bcrypt.hashSync(userData.password);
+        // referenced code would cause error "data and salt arguments required"
+        // because hash() or hashSync() requires salt rounds as well, but was missing...
     }
 
     // Convert the user data into an User model object
@@ -135,6 +143,8 @@ userController.post("/", auth(["admin"]), (req, res) => {
         userData.role,
         userData.firstName,
         userData.lastName,
+        userData.phone,
+        userData.address,
         null
     )
 
@@ -160,16 +170,21 @@ userController.post("/register", (req, res) => {
     // TODO: Implement request validation
 
     // hash the password
-    userData.password = bcrypt.hashSync(userData.password);
+    userData.password = bcrypt.hashSync(userData.password, 10);
+    // userData.password = bcrypt.hashSync(userData.password);
+    // referenced code causing error "data and salt arguments required"
+    // because hash() or hashSync() requires salt rounds as well, but was missing...
 
     // Convert the user data into an User model object
     const user = Users.newUser(
         null,
         userData.email,
         userData.password,
-        "spotter",
+        "customer",
         userData.firstName,
         userData.lastName,
+        userData.phone,
+        userData.address,
         null
     )
 
@@ -207,7 +222,12 @@ userController.patch("/:id", auth(["admin", "trainer", "customer"]), async (req,
     // update their own user records.
 
     // hash the password if it isn't already hashed
-    if (userData.password && !userData.password.startsWith("$2a")) {
+    if (userData.password
+        && (!userData.password.startsWith("$2a")
+            && !userData.password.startsWith("$2b")
+        )
+        // added condition $2b for newer version bcrypt hashes
+    ) {
         userData.password = await bcrypt.hash(userData.password, 10);
     }
 
@@ -219,6 +239,8 @@ userController.patch("/:id", auth(["admin", "trainer", "customer"]), async (req,
         userData.role,
         userData.firstName,
         userData.lastName,
+        userData.phone,
+        userData.address,
         userData.authenticationKey
     )
 
