@@ -1,4 +1,5 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom"
+import { RestrictedRoute } from "./components/RestrictedRoute"
 import Login from "./pages/Login"
 import Timetable from "./pages/Timetable"
 import XmlImport from "./pages/XmlImport"
@@ -20,7 +21,11 @@ const router = createBrowserRouter(
                 <Route path='bookings' element={<ViewBookings />}></Route>
                 <Route path='createBooking' element={<CreateBooking />}></Route>
                 <Route path='profile' element={<Profile />}></Route>
-                <Route path='import' element={<XmlImport />}></Route>
+                <Route path='import' element={
+                    <RestrictedRoute allowedRoles={["admin", "trainer"]}>
+                        <XmlImport />
+                    </RestrictedRoute>
+                }></Route>
                 <Route path='blog' element={<Blog />}></Route>
             </Route>
         </Route>
