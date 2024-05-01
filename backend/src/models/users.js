@@ -10,8 +10,6 @@ export function newUser(
     phone,
     address,
     authenticationKey,
-    createdAt,
-    updatedAt,
 ) {
     return {
         id,
@@ -23,8 +21,6 @@ export function newUser(
         phone,
         address,
         authenticationKey,
-        createdAt,
-        updatedAt,
     }
 }
 
@@ -44,8 +40,6 @@ export async function getAll() {
             userResult.phone,
             userResult.address,
             userResult.authentication_key,
-            userResult.created_at,
-            userResult.updated_at,
         ))
 }
 
@@ -67,8 +61,6 @@ export async function getByID(userID) {
                 userResult.phone,
                 userResult.address,
                 userResult.authentication_key,
-                userResult.created_at,
-                userResult.updated_at,
             )
         )
     } else {
@@ -94,8 +86,6 @@ export async function getByEmail(email) {
                 userResult.phone,
                 userResult.address,
                 userResult.authentication_key,
-                userResult.created_at,
-                userResult.updated_at,
             )
         )
     } else {
@@ -105,7 +95,7 @@ export async function getByEmail(email) {
 
 export async function getByAuthenticationKey(authenticationKey) {
     const [userResults] = await db.query(
-        "SELECT * FROM users WHERE authentication_key = ?", 
+        "SELECT * FROM users WHERE authentication_key = ?",
         authenticationKey
     )
 
@@ -122,8 +112,6 @@ export async function getByAuthenticationKey(authenticationKey) {
                 userResult.phone,
                 userResult.address,
                 userResult.authentication_key,
-                userResult.created_at,
-                userResult.updated_at,
             )
         )
     } else {
@@ -137,9 +125,8 @@ export async function create(user) {
     return db.query(
         "INSERT INTO users "
         + "(email, password, role, first_name, last_name, "
-        + "phone, address, authentication_key, "
-        + "created_at, updated_at) "
-        + "VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        + "phone, address, authentication_key) "
+        + "VALUE (?, ?, ?, ?, ?, ?, ?, ?)",
         [
             user.email,
             user.password,
@@ -149,8 +136,6 @@ export async function create(user) {
             user.phone,
             user.address,
             user.authenticationKey,
-            user.createdAt,
-            user.updatedAt,
         ]
     ).then(([result]) => {
         return { ...user, id: result.insertId }
@@ -167,9 +152,7 @@ export async function update(user) {
         + "last_name = ?, "
         + "phone = ?, "
         + "address = ?, "
-        + "authentication_key = ?, "
-        + "created_at = ?, "
-        + "updated_at = ? "
+        + "authentication_key = ? "
         + "WHERE id = ?",
         [
             user.email,
@@ -180,8 +163,6 @@ export async function update(user) {
             user.phone,
             user.address,
             user.authenticationKey,
-            user.createdAt,
-            user.updatedAt,
             user.id
         ]
     ).then(([result]) => {
@@ -189,7 +170,7 @@ export async function update(user) {
         return { ...user }
 
         // return { ...user, id: result.insertId }
-        /* This original return code from the reference project seems incorrect; 
+        /* This original return code from the reference project seems incorrect;
         result of UPDATE operation does not provide "insertId",
         so the line incorrectly updates the user ID to be "0".
         Removing "id: result.insertId" makes it work correctly. */
@@ -205,34 +186,16 @@ export async function deleteByID(userID) {
 
 // const user = newUser(
 //     null,
-//     "customer@trials.net",
+//     "madeline.westen@test.io",
 //     "abc123",
 //     "customer",
-//     "Michael",
+//     "Madeline",
 //     "Westen",
-//     "0422-654-321",
-//     "987 GHI Road, Brisbane, 4001",
-//     null,
-//     new Date(),
+//     "0433-987-654",
+//     "321 JKM Street, Brisbane, 4001",
 //     null,
 //     )
 // create(user).then(result => console.log(result))
-
-// const user = newUser(
-//     1,
-//     "admin@trials.net",
-//     "abc123",
-//     "admin",
-//     "Tim",
-//     "Horton",
-//     "0400-123-456",
-//     "1234 ABC street, Brisbane, 4001",
-//     null,
-//     "2024-03-12 11:52:06",
-//     new Date(),
-//     )
-// console.log(user)
-// update(user).then(result => console.log(result))
 
 // getAll().then(result => console.log(result))
 // getByID(2).then(result => console.log(result))
