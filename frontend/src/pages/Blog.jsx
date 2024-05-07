@@ -1,9 +1,65 @@
-// import Header from "../components/Header"
-// import Nav from "../components/Nav"
-// import Footer from "../components/Footer"
+import { useEffect, useState } from "react"
+import { useAuthentication } from "../hooks/authentication"
+import * as BlogPosts from "../api/blogs"
 // import { Link } from "react-router-dom"
+import personIcon from "../assets/img/iconmonstr-user-circle-thin.svg"
 
 function Blog () {
+    const [user, , , ] = useAuthentication()
+
+    const [formData, setFormData] = useState({
+        user_id: "",
+        title: "",
+        content: "",
+    })
+
+    const [statusMessage, setStatusMessage] = useState("")
+
+    // Load blog posts timeline
+    const [blogPosts, setBlogPosts] = useState([])
+    useEffect(() => {
+        if (user) {
+            BlogPosts.getAll(user.authenticationKey).then(result => {
+                setBlogPosts(result)
+            })
+            .catch((error) => console.error("Error fetching blogs:", error))
+        }
+    }, [user, blogPosts])
+
+    // Clears the currently loaded form data
+    function clear() {
+        setFormData({
+            user_id: "",
+            title: "",
+            content: "",
+        })
+        setStatusMessage("")
+    }
+
+    function addBlogPost(e) {
+        e.preventDefault()
+        setStatusMessage("Creating new post...")
+
+        // Add user_id to the post object before sending
+        const newPostData = {
+            ...formData,
+            user_id: user.id,
+        }
+
+        BlogPosts.create(newPostData, user.authenticationKey).then(result => {
+            clear()
+            setStatusMessage(result.message)
+            // setFormData({
+            //     user_id: "",
+            //     title: "",
+            //     content: "",
+            // })
+
+            // if (typeof onAdded === "function") {
+            //     onAdded()
+            // }
+        })
+    }
 
     // TODO: (optional) Implement "like" feature
     //
@@ -12,10 +68,11 @@ function Blog () {
     // https://hit.hateblo.jp/entry/mysql/iine
 
     // TODO: (optional) Implement "comment" feature
-    //
+    // TODO: (optional) Implement "update" feature
+    // TODO: (optional) Implement "delete" feature
 
     return <>
-        {/* <Header /> */}
+
         {/* <div>
             <h1>This is the mini blog page!</h1>
         </div> */}
@@ -29,28 +86,53 @@ function Blog () {
 
         <div className="flex">
             <div className="flex-1 m-2">
-                <h2 className="px-4 py-2 text-xl font-semibol">Home</h2>
+                <h2 className="px-4 py-2 text-xl font-semibol">Gym Blog!</h2>
             </div>
-            <div className="flex-1 px-4 py-2 m-2">
+            {/* <div className="flex-1 px-4 py-2 m-2">
                 <a href="" className=" text-2xl font-medium rounded-full  hover:bg-blue-800 hover:text-blue-300 float-right">
                     <svg className="m-2 h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><g><path d="M22.772 10.506l-5.618-2.192-2.16-6.5c-.102-.307-.39-.514-.712-.514s-.61.207-.712.513l-2.16 6.5-5.62 2.192c-.287.112-.477.39-.477.7s.19.585.478.698l5.62 2.192 2.16 6.5c.102.306.39.513.712.513s.61-.207.712-.513l2.16-6.5 5.62-2.192c.287-.112.477-.39.477-.7s-.19-.585-.478-.697zm-6.49 2.32c-.208.08-.37.25-.44.46l-1.56 4.695-1.56-4.693c-.07-.21-.23-.38-.438-.462l-4.155-1.62 4.154-1.622c.208-.08.37-.25.44-.462l1.56-4.693 1.56 4.694c.07.212.23.382.438.463l4.155 1.62-4.155 1.622zM6.663 3.812h-1.88V2.05c0-.414-.337-.75-.75-.75s-.75.336-.75.75v1.762H1.5c-.414 0-.75.336-.75.75s.336.75.75.75h1.782v1.762c0 .414.336.75.75.75s.75-.336.75-.75V5.312h1.88c.415 0 .75-.336.75-.75s-.335-.75-.75-.75zm2.535 15.622h-1.1v-1.016c0-.414-.335-.75-.75-.75s-.75.336-.75.75v1.016H5.57c-.414 0-.75.336-.75.75s.336.75.75.75H6.6v1.016c0 .414.335.75.75.75s.75-.336.75-.75v-1.016h1.098c.414 0 .75-.336.75-.75s-.336-.75-.75-.75z"></path></g>
                     </svg>
                 </a>
-            </div>
+            </div> */}
         </div>
 
         <hr className="border-gray-600" />
-            {/* <!--middle creat tweet--> */}
+            {/* <!--middle create tweet--> */}
             <div className="flex">
                 <div className="m-2 w-10 py-1">
-                    <img className="inline-block h-10 w-10 rounded-full" src="https://pbs.twimg.com/profile_images/1121328878142853120/e-rpjoJi_bigger.png" alt="" />
+                    <img className="inline-block h-10 w-10 rounded-full" src={personIcon} alt="" />
                 </div>
-                <div className="flex-1 px-2 pt-2 mt-2">
-                    <textarea className=" bg-transparent text-gray-400 font-medium text-lg w-full" rows="2" cols="50" placeholder="What's happening?"></textarea>
-                </div>
+                <form className="flex-1 px-2 pt-2 mt-2" onSubmit={addBlogPost}>
+                    <input
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData(existing => { return { ...existing, title: e.target.value } })}
+                        className=" bg-transparent text-gray-600 font-medium text-lg w-full"
+                        placeholder="post title"
+                    />
+                    <textarea
+                        value={formData.content}
+                        onChange={(e) => setFormData(existing => { return { ...existing, content: e.target.value } })}
+                        className=" bg-transparent text-gray-600 font-medium text-lg w-full"
+                        rows="2" cols="50"
+                        placeholder="What's happening?"
+                    ></textarea>
+                    <div>
+                        <button className="btn btn-primary mr-2">Post!</button>
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault()
+                                clear()
+                            }}
+                            className="btn btn-ghost">Clear</button>
+                    </div>
+                    <label className="label">
+                        <span className="label-text-alt">{statusMessage}</span>
+                    </label>
+                </form>
             </div>
             {/* <!--middle creat tweet below icons--> */}
-            <div className="flex">
+            {/* <div className="flex">
                 <div className="w-10"></div>
                 <div className="w-64 px-2">
                     <div className="flex items-center">
@@ -85,8 +167,41 @@ function Blog () {
                         Tweet
                     </button>
                 </div>
+            </div> */}
+        <hr className="border-gray-400 border-2 mt-2 mb-2" />
+
+        {/* timeline of posts start here */}
+        {blogPosts.map(blogPost =>
+            <div key={blogPost.id}>
+                <div className="flex flex-shrink-0 p-4 pb-0">
+                    <a href="#" className="flex-shrink-0 group block">
+                        <div className="flex items-center">
+                            <div>
+                                <img className="inline-block h-10 w-10 rounded-full" src={personIcon} alt="" />
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-base leading-6 font-medium ">
+                                    {blogPost.first_name}
+                                    <span className="text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
+                                        @{blogPost.last_name} . {blogPost.updated_at}
+                                        {/* TODO: why timestamp different from db? list order is correct though... */}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div className="pl-16 pb-4">
+                    <h2 className="text-base width-auto font-bold flex-shrink">
+                        {blogPost.title}
+                    </h2>
+                    <p className="text-base width-auto font-medium  flex-shrink">
+                        {blogPost.content}
+                    </p>
+                </div>
+                <hr className="border-gray-600" />
             </div>
-            <hr className="border-gray-200 border-4" />
+        )}
 
             {/* <!--first tweet start--> */}
             <div className="flex flex-shrink-0 p-4 pb-0">
@@ -156,7 +271,7 @@ function Blog () {
             <hr className="border-gray-600" />
 
             {/* <!--second tweet--> */}
-            <div className="flex flex-shrink-0 p-4 pb-0">
+            {/* <div className="flex flex-shrink-0 p-4 pb-0">
                 <a href="#" className="flex-shrink-0 group block">
                     <div className="flex items-center">
                         <div>
@@ -225,10 +340,10 @@ function Blog () {
                     </div>
                 </div>
             </div>
-            <hr className="border-gray-600" />
+            <hr className="border-gray-600" /> */}
 
                 {/* <!--third tweet--> */}
-                <div className="flex flex-shrink-0 p-4 pb-0">
+                {/* <div className="flex flex-shrink-0 p-4 pb-0">
                     <a href="#" className="flex-shrink-0 group block">
                         <div className="flex items-center">
                             <div>
@@ -294,12 +409,7 @@ function Blog () {
                         </div>
                     </div>
                 </div>
-                <hr className="border-gray-600" />
-
-            {/* </div> */}
-
-        {/* <Nav /> */}
-        {/* <Footer /> */}
+                <hr className="border-gray-600" /> */}
     </>
 }
 
