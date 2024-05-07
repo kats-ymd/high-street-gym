@@ -9,7 +9,6 @@ export const db = mysql.createPool({
     database: process.env.DB_DATABASE
 })
 
-
 // if .env file is placed under app root folder,
 // it works for app but does not work for model function only test
 // if placed under backend folder,
@@ -17,3 +16,13 @@ export const db = mysql.createPool({
 //
 // >>> looks like it depends on what directory you are in
 // >>> if running model functions, move to backend directory
+
+export function convertToMySQLDate(date) {
+    const year = date.toLocaleString('default', {year: 'numeric'});
+    const month = date.toLocaleString('default', {
+        month: '2-digit',
+    });
+    const day = date.toLocaleString('default', {day: '2-digit'});
+
+    return [year, month, day].join('-');
+}
