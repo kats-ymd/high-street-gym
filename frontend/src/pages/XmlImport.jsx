@@ -4,7 +4,7 @@ import { API_URL } from "../api/api"
 import { useAuthentication } from "../hooks/authentication";
 import upload from "../assets/img/iconmonstr-upload-18.svg"
 
-function XmlImport({ onUploadSuccess, uploadUrl, disabled = false }) {
+function XmlImport({ /* onUploadSuccess,*/ uploadUrl, disabled = false }) {
     const navigate = useNavigate()
 
     const [user] = useAuthentication()
@@ -46,12 +46,13 @@ function XmlImport({ onUploadSuccess, uploadUrl, disabled = false }) {
             .then(res => res.json())
             .then(APIResponse => {
                 setStatusMessage(APIResponse.message)
+                setUploadOption("")
                 // clear the selected file
                 uploadInputRef.current.value = null
-                // Notify of successful upload
-                if (typeof onUploadSuccess === "function") {
-                    onUploadSuccess()
-                }
+                // // Notify of successful upload
+                // if (typeof onUploadSuccess === "function") {
+                //     onUploadSuccess()
+                // }
             })
             .catch(error => {
                 setStatusMessage("Upload failed - " + error)
