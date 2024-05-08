@@ -1,14 +1,14 @@
 import { db } from "../database.js"
 
 export function newLocation(
-    id,
-    name,
+    location_id,
+    location_name,
     // created_at,
     // updated_at,
 ) {
     return {
-        id,
-        name,
+        location_id,
+        location_name,
         // created_at,
         // updated_at,
     }
@@ -21,8 +21,8 @@ export async function getAll() {
 
     return await allLocationsResults.map((locationResult) =>
         newLocation(
-            locationResult.id.toString(),
-            locationResult.name,
+            locationResult.location_id.toString(),
+            locationResult.location_name,
             // locationResult.created_at,
             // locationResult.updated_at,
         ))
@@ -31,15 +31,15 @@ export async function getAll() {
 
 async function getByID(locationID) {
     const [results] = await db.query(
-        "SELECT * FROM locations WHERE id = ?", locationID
+        "SELECT * FROM locations WHERE location_id = ?", locationID
     )
 
     if (results.length > 0) {
         const locationResult = results[0];
         return Promise.resolve(
             newLocation(
-                locationResult.id.toString(),
-                locationResult.name,
+                locationResult.location_id.toString(),
+                locationResult.location_name,
             )
         )
     } else {
@@ -50,13 +50,13 @@ async function getByID(locationID) {
 export async function create(location) {
     return db.query(
         "INSERT INTO locations "
-        + "(name) "
+        + "(location_name) "
         + "VALUE (?)",
         [
-            location.name,
+            location.location_name,
         ]
     ).then(([result]) => {
-        return { id: result.insertId }
+        return { location_id: result.insertId }
     })
 }
 
@@ -67,9 +67,10 @@ export async function create(location) {
 
 // const location = newLocation(
 //     null,
-//     "Zumba",
+//     "Mansfield",
 // )
-// create(location).then(result => console.log(result))
+// // create(location).then(result => console.log(result))
+// create(location).then(getAll().then(result => console.log(result)))
 
 // getAll().then(result => console.log(result))
 // getByID(1).then(result => console.log(result))

@@ -1,18 +1,18 @@
 import { db } from "../database.js"
 
 export function newActivity(
-    id,
-    name,
-    description,
-    duration_minute,
+    activity_id,
+    activity_name,
+    activity_description,
+    activity_duration_minute,
     // created_at,
     // updated_at,
 ) {
     return {
-        id,
-        name,
-        description,
-        duration_minute,
+        activity_id,
+        activity_name,
+        activity_description,
+        activity_duration_minute,
         // created_at,
         // updated_at,
     }
@@ -25,10 +25,10 @@ export async function getAll() {
 
     return await allActivities.map((activityResult) =>
         newActivity(
-            activityResult.id.toString(),
-            activityResult.name,
-            activityResult.description,
-            activityResult.duration_minute,
+            activityResult.activity_id.toString(),
+            activityResult.activity_name,
+            activityResult.activity_description,
+            activityResult.activity_duration_minute,
             // activityResult.created_at,
             // activityResult.updated_at,
         ))
@@ -36,17 +36,17 @@ export async function getAll() {
 
 async function getByID(activityID) {
     const [results] = await db.query(
-        "SELECT * FROM activities WHERE id = ?", activityID
+        "SELECT * FROM activities WHERE activity_id = ?", activityID
     )
 
     if (results.length > 0) {
         const activityResult = results[0];
         return Promise.resolve(
             newActivity(
-                activityResult.id,
-                activityResult.name,
-                activityResult.description,
-                activityResult.duration_minute
+                activityResult.activity_id,
+                activityResult.activity_name,
+                activityResult.activity_description,
+                activityResult.activity_duration_minute
             )
         )
     } else {
@@ -57,15 +57,15 @@ async function getByID(activityID) {
 export async function create(activity) {
     return db.query(
         "INSERT INTO activities "
-        + "(name, description, duration_minute) "
+        + "(activity_name, activity_description, activity_duration_minute) "
         + "VALUE (?, ?, ?)",
         [
-            activity.name,
-            activity.description,
-            activity.duration_minute
+            activity.activity_name,
+            activity.activity_description,
+            activity.activity_duration_minute
         ]
     ).then(([result]) => {
-        return { id: result.insertId }
+        return { activity_id: result.insertId }
     })
 }
 
