@@ -3,6 +3,7 @@ import { useAuthentication } from "../hooks/authentication"
 import * as BlogPosts from "../api/blogs"
 // import { Link } from "react-router-dom"
 import personIcon from "../assets/img/iconmonstr-user-circle-thin.svg"
+import LoadingSpinner from "../components/LoadingSpinner"
 
 function Blog () {
     const [user, , , ] = useAuthentication()
@@ -17,10 +18,12 @@ function Blog () {
 
     // Load blog posts timeline
     const [blogPosts, setBlogPosts] = useState([])
+    const [loading, setLoading] = useState(true)
     useEffect(() => {
         if (user) {
             BlogPosts.getAll(user.authenticationKey).then(result => {
                 setBlogPosts(result)
+                setLoading(false)
             })
             .catch((error) => console.error("Error fetching blogs:", error))
         }
@@ -71,7 +74,7 @@ function Blog () {
     // TODO: (optional) Implement "update" feature
     // TODO: (optional) Implement "delete" feature
 
-    return <>
+    return loading ? <LoadingSpinner /> : <>
 
         {/* <div>
             <h1>This is the mini blog page!</h1>
@@ -172,7 +175,7 @@ function Blog () {
 
         {/* timeline of posts start here */}
         {blogPosts.map(blogPost =>
-            <div key={blogPost.id}>
+            <div key={blogPost.post_id}>
                 <div className="flex flex-shrink-0 p-4 pb-0">
                     <a href="#" className="flex-shrink-0 group block">
                         <div className="flex items-center">
