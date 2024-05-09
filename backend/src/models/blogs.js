@@ -1,7 +1,7 @@
 import { db } from "../database.js";
 
 export function newPost(
-    id,
+    post_id,
     user_id,
     title,
     content,
@@ -11,7 +11,7 @@ export function newPost(
     last_name,
 ) {
     return {
-        id,
+        post_id,
         user_id,
         title,
         content,
@@ -24,14 +24,17 @@ export function newPost(
 
 export async function getAll() {
     const [allBlogPosts] = await db.query(
-        "SELECT * FROM blog_posts "
-        + "LEFT JOIN users ON blog_posts.user_id = users.id "
+        "SELECT blog_posts.post_id, blog_posts.user_id, "
+        + "blog_posts.title, blog_posts.content, "
+        + "blog_posts.created_at, blog_posts.updated_at, "
+        + "users.first_name, users.last_name FROM blog_posts "
+        + "INNER JOIN users ON blog_posts.user_id = users.id "
         + "ORDER BY blog_posts.updated_at DESC"
     )
 
     return await allBlogPosts.map((blogPostResult) =>
         newPost(
-            blogPostResult.id.toString(),
+            blogPostResult.post_id.toString(),
             blogPostResult.user_id,
             blogPostResult.title,
             blogPostResult.content,
@@ -50,8 +53,11 @@ export async function getByPage(page, size) {
 
     // Get the collection of blog posts on a given "page"
     const [paginatedBlogPostResults] = await db.query(
-        "SELECT * FROM blog_posts "
-        + "LEFT JOIN users ON blog_posts.user_id = users.id "
+        "SELECT blog_posts.post_id, blog_posts.user_id, "
+        + "blog_posts.title, blog_posts.content, "
+        + "blog_posts.created_at, blog_posts.updated_at, "
+        + "users.first_name, users.last_name FROM blog_posts "
+        + "INNER JOIN users ON blog_posts.user_id = users.id "
         + "ORDER BY blog_posts.updated_at DESC LIMIT ?, ?",
         [offset, size]
     )
@@ -59,7 +65,7 @@ export async function getByPage(page, size) {
     // Convert the collection of results into a list of Post objects
     return await paginatedBlogPostResults.map((blogPostResult) =>
         newPost(
-            blogPostResult.id.toString(),
+            blogPostResult.post_id.toString(),
             blogPostResult.user_id,
             blogPostResult.title,
             blogPostResult.content,
@@ -73,15 +79,18 @@ export async function getByPage(page, size) {
 export async function getTop(amount) {
     // Get the collection of all posts
     const [allBlogPostsResults] = await db.query(
-        "SELECT * FROM blog_posts "
-        + "LEFT JOIN users ON blog_posts.user_id = users.id "
+        "SELECT blog_posts.post_id, blog_posts.user_id, "
+        + "blog_posts.title, blog_posts.content, "
+        + "blog_posts.created_at, blog_posts.updated_at, "
+        + "users.first_name, users.last_name FROM blog_posts "
+        + "INNER JOIN users ON blog_posts.user_id = users.id "
         + "ORDER BY blog_posts.updated_at DESC LIMIT ?",
         [amount]
     )
     // Convert the collection of results into a list of Post objects
     return await allBlogPostsResults.map((blogPostResult) =>
         newPost(
-            blogPostResult.id.toString(),
+            blogPostResult.post_id.toString(),
             blogPostResult.user_id,
             blogPostResult.title,
             blogPostResult.content,
