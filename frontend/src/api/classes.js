@@ -15,7 +15,5 @@ export async function getAll(authenticationKey) {
 
     const APIResponseObject = await response.json()
 
-    console.log(APIResponseObject)
-
     return APIResponseObject
 }
