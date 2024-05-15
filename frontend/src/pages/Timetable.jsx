@@ -1,82 +1,52 @@
-// import Header from "../components/Header"
-// import Nav from "../components/Nav"
-// import Footer from "../components/Footer"
+import { useEffect, useState } from "react"
+import { useAuthentication } from "../hooks/authentication"
+import * as Classes from "../api/classes"
 import { Link } from "react-router-dom"
+import LoadingSpinner from "../components/LoadingSpinner"
 
 function Timetable () {
-    return <>
-        {/* <Header /> */}
+
+    const [user, , , ] = useAuthentication()
+
+    const [statusMessage, setStatusMessage] = useState("")
+
+    // Load classes
+    const [allClassDatesAndDays, setAllClassDatesAndDays] = useState([])
+    const [activitiesOfDay, setActivitiesOfDay] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        if (user) {
+            Classes.getAll(user.authenticationKey).then(results => {
+                setAllClassDatesAndDays(results.allClassDatesAndDays)
+                setActivitiesOfDay(results.activitiesOfDay)
+                setLoading(false)
+
+                // console.log(results.allClassDatesAndDays)
+                // console.log(results.activitiesOfDay)
+            })
+            .catch((error) => console.error("Error fetching classes:", error))
+        }
+    }, [user])
+
+    return loading ? <LoadingSpinner /> : <>
         <div className="flex flex-col">
             <h1>This is the Timetable page!</h1>
-            <span className="border border-black">Monday</span>
-            <div className="columns-2 flex justify-between">
-                <span>HIIT</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <div className="columns-2 flex justify-between">
-                <span>Yoga</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <div className="columns-2 flex justify-between">
-                <span>Boxing</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <span className="border border-black">Tuesday</span>
-            <div className="columns-2 flex justify-between">
-                <span>Pilates</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <div className="columns-2 flex justify-between">
-                <span>Yoga</span>
-                <Link to="/createBooking">Book &gt;</Link>
+            {allClassDatesAndDays.map((eachClassDate, index) =>
+            <div key={eachClassDate.class_date}>
+                <div className="border border-black flex justify-between">
+                    <span className="mx-2">{eachClassDate.class_day}</span>
+                    <span className="mx-2">{new Date(eachClassDate.class_date).toLocaleDateString()}</span>
                 </div>
-            <div className="columns-2 flex justify-between">
-                <span>Aquacise</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <span className="border border-black">Wednesday</span>
-            <div className="columns-2 flex justify-between">
-                <span>HIIT</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <div className="columns-2 flex justify-between">
-                <span>Yoga</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <div className="columns-2 flex justify-between">
-                <span>Boxing</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <span className="border border-black">Thursday</span>
-            <div className="columns-2 flex justify-between">
-                <span>Pilates</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <div className="columns-2 flex justify-between">
-                <span>Yoga</span>
-                <Link to="/createBooking">Book &gt;</Link>
+
+                {activitiesOfDay[index].map((activities) =>
+                <div key={activities} className="columns-2 flex justify-between">
+                    <span>{activities}</span>
+                    <Link to="/createBooking">Book &gt;</Link>
                 </div>
-            <div className="columns-2 flex justify-between">
-                <span>Aquacise</span>
-                <Link to="/createBooking">Book &gt;</Link>
+                )}
             </div>
-            <span className="border border-black">Friday</span>
-            <div className="columns-2 flex justify-between">
-                <span>HIIT</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <div className="columns-2 flex justify-between">
-                <span>Yoga</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <div className="columns-2 flex justify-between">
-                <span>Boxing</span>
-                <Link to="/createBooking">Book &gt;</Link>
-            </div>
-            <span className="border border-black">Saturday</span>
-            <span className="border border-black">Sunday</span>
-            {/* <Nav /> */}
-            {/* <Footer /> */}
+            )}
         </div>
     </>
 }
