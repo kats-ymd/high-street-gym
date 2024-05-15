@@ -1,18 +1,30 @@
 import { db } from "../database.js"
 
 export function newBooking(
-    id,
-    user_id,
+    booking_id,
+    booking_user_id,
     class_id,
     // created_at,
     // updated_at,
+    trainer_first_name,
+    trainer_last_name,
+    class_date,
+    class_time,
+    activity_name,
+    location_name,
 ) {
     return {
-        id,
-        user_id,
+        booking_id,
+        booking_user_id,
         class_id,
         // created_at,
         // updated_at,
+        trainer_first_name,
+        trainer_last_name,
+        class_date,
+        class_time,
+        activity_name,
+        location_name,
     }
 }
 
@@ -23,7 +35,7 @@ export async function getAll() {
 
     return await allBookings.map((bookingResult) =>
         newBooking(
-            bookingResult.id.toString(),
+            bookingResult.booking_id.toString(),
             bookingResult.user_id,
             bookingResult.class_id,
             // bookingResult.created_at,
@@ -31,18 +43,37 @@ export async function getAll() {
         ))
 }
 
-async function getByUserID(userID) {
-    const [results] = await db.query(
-        "SELECT * FROM bookings WHERE user_id = ?", userID
+export async function getByUserID(userID) {
+    const [allBookings] = await db.query(
+        "SELECT bookings.booking_id, bookings.user_id, bookings.class_id, "
+        + "users.first_name, users.last_name, "
+        + "classes.class_date, classes.class_time, "
+        + "activities.activity_name, locations.location_name "
+        + "FROM bookings "
+        // + "INNER JOIN users ON bookings.user_id = users.id "
+        + "INNER JOIN classes ON bookings.class_id = classes.class_id "
+        + "INNER JOIN locations ON classes.location_id = locations.location_id "
+        + "INNER JOIN activities ON classes.activity_id = activities.activity_id "
+        + "INNER JOIN users ON classes.trainer_user_id = users.id "
+        + "WHERE bookings.user_id = ? "
+        + "ORDER BY classes.class_date ASC, classes.class_time ASC",
+        userID
     )
 
-    if (results.length > 0) {
-        const bookingResult = results[0];
+    if (allBookings.length > 0) {
         return Promise.resolve(
-            newBooking(
-                bookingResult.id.toString(),
-                bookingResult.user_id,
-                bookingResult.class_id,
+            allBookings.map(bookingResult =>
+                newBooking(
+                    bookingResult.booking_id.toString(),
+                    bookingResult.user_id,
+                    bookingResult.class_id,
+                    bookingResult.first_name,
+                    bookingResult.last_name,
+                    bookingResult.class_date,
+                    bookingResult.class_time,
+                    bookingResult.activity_name,
+                    bookingResult.location_name,
+                )
             )
         )
     } else {
@@ -84,4 +115,4 @@ export async function deleteByID(bookingID) {
 // create(activity).then(result => console.log(result))
 
 // getAll().then(result => console.log(result))
-// getByID(6).then(result => console.log(result))
+// getByUserID(3).then(result => console.log(result))
