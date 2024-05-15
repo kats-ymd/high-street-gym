@@ -5,6 +5,7 @@ import fileUpload from "express-fileupload"
 import userController from "./controllers/users.js"
 import blogController from "./controllers/blogs.js"
 import classController from "./controllers/classes.js"
+import bookingController from "./controllers/bookings.js"
 
 // Create express application
 const port = 8080
@@ -35,6 +36,7 @@ app.use(fileUpload({
 app.use("/users", userController)
 app.use("/blogs", blogController)
 app.use("/classes", classController)
+app.use("/bookings", bookingController)
 
 // Catch errors raised by endpoints and respond with JSON error object
 app.use((err, req, res, next) => {
