@@ -118,7 +118,7 @@ export async function getByTrainerUserID(trainerUserID) {
         + "INNER JOIN locations ON classes.location_id = locations.location_id "
         + "INNER JOIN activities ON classes.activity_id = activities.activity_id "
         + "INNER JOIN users ON classes.trainer_user_id = users.id "
-        + "WHERE trainer_user_id = ? "
+        + "WHERE trainer_user_id = ? AND class_date >= current_date() "
         + "ORDER BY class_date ASC, class_time ASC",
         trainerUserID
     )
