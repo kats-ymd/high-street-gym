@@ -62,12 +62,12 @@ function Signup () {
 
     return <>
         <div>
+            {/* <h1 className="text-2xl">Sign Up</h1> */}
             <img
                 src={profile}
                 alt="user image placeholder"
                 className="w-40 my-4 mx-auto"
             />
-            <h1>This is the signup page!</h1>
             <form className="flex flex-col gap-y-2" onSubmit={onSignupSubmit}>
                 <input
                     type="text"

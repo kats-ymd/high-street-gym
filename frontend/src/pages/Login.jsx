@@ -36,20 +36,20 @@ function Login() {
 
     return <>
         <div>
+            {/* <h1 className="text-2xl">This is the login page!</h1> */}
             <img src={logo} alt="logo image" className="w-40 my-4 mx-auto" />
-            <h1>This is the login page!</h1>
             <form className="flex flex-col gap-y-2" onSubmit={onLoginSubmit}>
-                <input 
-                    type="email" 
-                    placeholder="Email" 
-                    className="input input-bordered" 
-                    value={formData.email} 
+                <input
+                    type="email"
+                    placeholder="Email"
+                    className="input input-bordered"
+                    value={formData.email}
                     onChange={(e) => setFormData(existing => { return { ...existing, email: e.target.value } })}
                 />
-                <input 
-                    type="password" 
-                    placeholder="Password" 
-                    className="input input-bordered" 
+                <input
+                    type="password"
+                    placeholder="Password"
+                    className="input input-bordered"
                     value={formData.password}
                     onChange={(e) => setFormData(existing => { return { ...existing, password: e.target.value } })}
                 />
