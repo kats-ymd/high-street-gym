@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import { useAuthentication } from "../hooks/authentication"
 import * as Classes from "../api/classes"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import LoadingSpinner from "../components/LoadingSpinner"
 
 function Timetable () {
+    const navigate = useNavigate()
 
     const [user, , , ] = useAuthentication()
 
@@ -29,25 +30,30 @@ function Timetable () {
         }
     }, [user])
 
-    return loading ? <LoadingSpinner /> : <>
-        <div className="flex flex-col">
-            <h1>This is the Timetable page!</h1>
-            {allClassDatesAndDays.map((eachClassDate, index) =>
-            <div key={eachClassDate.class_date}>
-                <div className="border border-black flex justify-between">
-                    <span className="mx-2">{eachClassDate.class_day}</span>
-                    <span className="mx-2">{new Date(eachClassDate.class_date).toLocaleDateString()}</span>
-                </div>
+    function handleOnClick(classDate, activity) {
+        navigate(`/createBooking/${activity.activity_id}`, { state: { classDate: classDate, activity: activity } })
+        // console.log(classDate, activity)
+    }
 
-                {activitiesOfDay[index].map((activities) =>
-                <div key={activities} className="columns-2 flex justify-between">
-                    <span>{activities}</span>
-                    <Link to="/createBooking">Book &gt;</Link>
+    return loading ? <LoadingSpinner /> : <>
+        <h1 className="text-2xl">Currently offered classes:</h1>
+        <form className="flex flex-col">
+            {allClassDatesAndDays.map((eachClassDate, index) =>
+                <div key={eachClassDate.class_date}>
+                    <div className="border border-black flex justify-between">
+                        <span className="mx-2">{eachClassDate.class_day}</span>
+                        <span className="mx-2">{new Date(eachClassDate.class_date).toLocaleDateString()}</span>
+                    </div>
+
+                    {activitiesOfDay[index].map((activities) =>
+                        <div key={activities.activity_id} className="columns-2 flex justify-between">
+                            <span>{activities.activity_name}</span>
+                            <button onClick={() => handleOnClick(eachClassDate, activities)} className="text-blue-600">Book &gt;</button>
+                        </div>
+                    )}
                 </div>
-                )}
-            </div>
             )}
-        </div>
+        </form>
     </>
 }
 
