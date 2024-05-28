@@ -56,6 +56,7 @@ export async function getByUserID(userID) {
         + "INNER JOIN activities ON classes.activity_id = activities.activity_id "
         + "INNER JOIN users ON classes.trainer_user_id = users.id "
         + "WHERE bookings.user_id = ? "
+        + "AND ((classes.class_date = CURRENT_DATE() AND classes.class_time >= CURRENT_TIME()) OR classes.class_date >= (CURRENT_DATE() + INTERVAL 1 DAY))"
         + "ORDER BY classes.class_date ASC, classes.class_time ASC",
         userID
     )
@@ -87,8 +88,8 @@ export async function create(booking) {
         + "(user_id, class_id) "
         + "VALUE (?, ?)",
         [
-            booking.user_id,
-            booking.class_id
+            booking.userID,
+            booking.classID
         ]
     ).then(([result]) => {
         return { id: result.insertId }
@@ -97,7 +98,7 @@ export async function create(booking) {
 
 export async function deleteByID(bookingID) {
     return db.query(
-        "DELETE FROM bookings WHERE id = ?", bookingID
+        "DELETE FROM bookings WHERE booking_id = ?", bookingID
     )
 }
 
