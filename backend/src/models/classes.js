@@ -118,7 +118,8 @@ export async function getByTrainerUserID(trainerUserID) {
         + "INNER JOIN locations ON classes.location_id = locations.location_id "
         + "INNER JOIN activities ON classes.activity_id = activities.activity_id "
         + "INNER JOIN users ON classes.trainer_user_id = users.id "
-        + "WHERE trainer_user_id = ? AND class_date >= current_date() "
+        + "WHERE trainer_user_id = ? "
+        + "AND ((class_date = CURRENT_DATE() AND class_time >= CURRENT_TIME()) OR class_date >= (CURRENT_DATE() + INTERVAL 1 DAY)) "
         + "ORDER BY class_date ASC, class_time ASC",
         trainerUserID
     )
@@ -152,29 +153,88 @@ export async function getByTrainerUserID(trainerUserID) {
 
 export async function getByDateAndActivity(date) {
     const [allClasses] = await db.query(
-        "SELECT DISTINCT activity_name FROM classes "
+        "SELECT DISTINCT classes.activity_id, activities.activity_name FROM classes "
         + "INNER JOIN activities ON classes.activity_id = activities.activity_id "
         + "WHERE class_date = ?"
     , date)
 
-    return await allClasses.map((classResult) =>
-            // classResult.activity_id,
-            classResult.activity_name,
-            // classResult.activity_description,
-            // classResult.activity_duration_minute,
-        )
+    // return await allClasses.map((classResult) =>
+    //         // classResult.activity_id,
+    //         classResult.activity_name,
+    //         // classResult.activity_description,
+    //         // classResult.activity_duration_minute,
+    //     )
+
+    return allClasses
 }
 
 export async function getAllDatesAndDays() {
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-
     const [allDates] = await db.query(
-        "SELECT DISTINCT class_date FROM classes WHERE class_date >= current_date() ORDER BY class_date"
+        "SELECT DISTINCT class_date FROM classes "
+        + "WHERE ((class_date = CURRENT_DATE() AND class_time >= CURRENT_TIME()) OR class_date >= (CURRENT_DATE() + INTERVAL 1 DAY)) "
+        + "ORDER BY class_date"
     )
 
     return await allDates.map(results =>
         results.class_date
     )
+}
+
+export async function getDatesAndDaysByActivityID(activityID) {
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+    const [allDates] = await db.query(
+        "SELECT DISTINCT class_date FROM classes "
+        + "WHERE activity_id = ? "
+        + "AND ((class_date = CURRENT_DATE() AND class_time >= CURRENT_TIME()) OR class_date >= (CURRENT_DATE() + INTERVAL 1 DAY)) "
+        + "ORDER BY class_date",
+        activityID
+    )
+
+    return await allDates.map(results => ({
+        classDate: results.class_date,
+        classDay: daysOfWeek[new Date(results.class_date).getDay()]
+    }))
+}
+
+// getDatesAndDaysByActivityID(5).then(results => console.log("model", results))
+
+export async function getByActivityID(activityID) {
+    const [allClasses] = await db.query(
+        "SELECT * FROM classes "
+        + "INNER JOIN locations ON classes.location_id = locations.location_id "
+        + "INNER JOIN activities ON classes.activity_id = activities.activity_id "
+        + "INNER JOIN users ON classes.trainer_user_id = users.id "
+        + "WHERE classes.activity_id = ? "
+        + "AND ((class_date = CURRENT_DATE() AND class_time >= CURRENT_TIME()) OR class_date >= (CURRENT_DATE() + INTERVAL 1 DAY)) "
+        + "ORDER BY class_date ASC, class_time ASC",
+        activityID
+    )
+
+    if (allClasses.length > 0) {
+        return Promise.resolve(
+            allClasses.map(classResult =>
+                newClass(
+                    classResult.class_id.toString(),
+                    classResult.class_date,
+                    classResult.class_time,
+                    classResult.location_id,
+                    classResult.activity_id,
+                    classResult.trainer_user_id,
+                    // classResult.created_at,
+                    // classResult.updated_at,
+                    classResult.location_name,
+                    classResult.activity_name,
+                    classResult.activity_description,
+                    classResult.activity_duration_minute,
+                    classResult.first_name,
+                    classResult.last_name,
+                )
+            )
+        )
+    } else {
+        return Promise.reject("no results found");
+    }
 }
 
 export async function create(newClassInfo) {
