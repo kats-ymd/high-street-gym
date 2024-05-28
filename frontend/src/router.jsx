@@ -19,7 +19,7 @@ const router = createBrowserRouter(
                 <Route path='signup' element={<Signup />}></Route>
                 <Route path='timetable' element={<Timetable />}></Route>
                 <Route path='bookings' element={<ViewBookings />}></Route>
-                <Route path='createBooking' element={<CreateBooking />}></Route>
+                <Route path='createBooking/:activityID' element={<CreateBooking />}></Route>
                 <Route path='profile' element={<Profile />}></Route>
                 <Route path='import' element={
                     <RestrictedRoute allowedRoles={["admin", "trainer"]}>
