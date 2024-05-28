@@ -74,7 +74,7 @@ function Blog () {
 
         <div className="flex">
             <div className="flex-1 m-2">
-                <h2 className="px-4 py-2 text-xl font-semibol">Gym Blog!</h2>
+                <h1 className="py-2 text-2xl font-semibold">Gym Blog!</h1>
             </div>
             {/* <div className="flex-1 px-4 py-2 m-2">
                 <a href="" className=" text-2xl font-medium rounded-full  hover:bg-blue-800 hover:text-blue-300 float-right">

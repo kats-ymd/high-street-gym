@@ -66,8 +66,8 @@ function XmlImport({ /* onUploadSuccess,*/ uploadUrl, disabled = false }) {
 
     return <>
         <div>
+            <h1 className="text-2xl">XML Import</h1>
             <img src={upload} alt="upload to cloud icon" className="w-40 my-4 mx-auto" />
-            <h1>This is the XML Import page!</h1>
             <form className="flex flex-col gap-y-2" onSubmit={uploadFile}>
                 <select
                     onChange={(e) => handleOnChange(e)}

@@ -80,12 +80,12 @@ function Profile ({ userID, onSave, allowEditRole }) {
 
     return <>
         <div>
+            <h1 className="text-2xl">User Profile</h1>
             <img
                 src={profile}
                 alt="user image placeholder"
                 className="w-40 my-4 mx-auto"
             />
-            <h1>This is the profile page!</h1>
             <form className="flex flex-col gap-y-2">
                 <input
                     type="text"
