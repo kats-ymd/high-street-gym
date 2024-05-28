@@ -69,4 +69,52 @@ bookingController.get("/:id", auth(["admin", "trainer", "customer"]), async (req
 
 })
 
+bookingController.post("/", auth(["admin", "trainer", "customer"]), async (req, res) => {
+    const bookingData = req.body.booking
+
+    // console.log("backend", bookingData)
+
+    // TODO: Input validation (prevent double booking)
+    // check if same class ID already exists in the user's booking table
+    const existingBooking = await Bookings.getByUserID(bookingData.userID)
+    if (existingBooking.some(booking => booking.class_id == bookingData.classID)) {
+        return res.status(400).json({
+            status: 400,
+            message: "Oops, same class has already been booked!"
+        })
+    }
+
+    Bookings.create(bookingData).then(booking => {
+        res.status(200).json({
+            status: 200,
+            message: "Created booking",
+            booking: booking
+        })
+    }).catch(error => {
+        res.status(500).json({
+            status: 500,
+            message: "Failed to create booking:" + error,
+        })
+    })
+
+})
+
+bookingController.delete("/:id", auth(["admin", "trainer", "customer"]), async (req, res) => {
+    const bookingID = req.params.id
+
+    // TODO: Implement request validation
+
+    Bookings.deleteByID(bookingID).then(result => {
+        res.status(200).json({
+            status: 200,
+            message: "Booking deleted",
+        })
+    }).catch(error => {
+        res.status(500).json({
+            status: 500,
+            message: "Failed to delete booking",
+        })
+    })
+})
+
 export default bookingController
