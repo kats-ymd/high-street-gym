@@ -31,20 +31,45 @@ classController.get("/", auth(["admin", "trainer", "customer"]), async (req, res
         allClassDatesAndDays.push({
             class_date: classDate,
             class_day: daysOfWeek[classDate.getDay()],
-            activitiesOfDay: activities
+            // activitiesOfDay: activities
         })
 
+        // console.log(activities)
         activitiesOfDay.push(activities)
+
+        // TODO: (future) combine the two variables together if possible?
     }
 
     // console.log(allClassDatesAndDays)
-    // console.log(allClassDates)
+    // console.log(activitiesOfDay)
 
     res.status(200).json({
         status: 200,
         message: "Get all classes",
         allClassDatesAndDays: allClassDatesAndDays,
         activitiesOfDay: activitiesOfDay
+    })
+})
+
+classController.get("/:activityID", auth(["admin", "trainer", "customer"]), async (req, res) => {
+    const activityID = req.params.activityID
+
+    const datesAndDays = await Classes.getDatesAndDaysByActivityID(activityID)
+
+    // console.log("controller", datesAndDays)
+
+    Classes.getByActivityID(activityID).then(allClasses => {
+        res.status(200).json({
+            status: 200,
+            message: "Got all classes of the activity",
+            allClasses: allClasses,
+            datesAndDays: datesAndDays,
+        })
+    }).catch(error => {
+        res.status(500).json({
+            status: 500,
+            message: "Error: " + error,
+        })
     })
 })
 
