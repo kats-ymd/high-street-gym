@@ -19,6 +19,7 @@ function ViewBookings () {
             Bookings.getByUserID(user.id, user.authenticationKey).then(results => {
                 setAllBookings(results.bookings)
                 setAllClasses(results.classes)
+                setStatusMessage(results.message)
                 setLoading(false)
 
                 console.log(results.bookings)
@@ -26,6 +27,7 @@ function ViewBookings () {
             })
             .catch((error) => {
                 console.error("Error fetching bookings:", error)
+                setStatusMessage("Error fetching bookings:" + error)
                 setAllBookings([])
                 setLoading(false)
             })
@@ -43,6 +45,7 @@ function ViewBookings () {
         if (window.confirm(deleteConfirmationMessage)) {
             Bookings.deleteByID(booking.booking_id, user.authenticationKey).then(result => {
                 console.log(result)
+                setStatusMessage(result.message)
             })
         }
     }
@@ -70,6 +73,7 @@ function ViewBookings () {
         : <>
             <div className="flex flex-col">
                 <h1 className="text-2xl">Your current class bookings:</h1>
+                <span className="label-text-alt">{statusMessage}</span>
                 {allBookings.map((eachBooking) =>
                     <div key={eachBooking.booking_id} className="border-t-2 border-dashed border-gray-400 py-2">
                         <div className="flex justify-between">
