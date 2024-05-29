@@ -10,8 +10,9 @@ export function newBooking(
     trainer_last_name,
     class_date,
     class_time,
-    activity_name,
     location_name,
+    activity_name,
+    activity_duration_minute,
 ) {
     return {
         booking_id,
@@ -23,8 +24,9 @@ export function newBooking(
         trainer_last_name,
         class_date,
         class_time,
-        activity_name,
         location_name,
+        activity_name,
+        activity_duration_minute,
     }
 }
 
@@ -48,7 +50,8 @@ export async function getByUserID(userID) {
         "SELECT bookings.booking_id, bookings.user_id, bookings.class_id, "
         + "users.first_name, users.last_name, "
         + "classes.class_date, classes.class_time, "
-        + "activities.activity_name, locations.location_name "
+        + "locations.location_name, "
+        + "activities.activity_name, activities.activity_duration_minute "
         + "FROM bookings "
         // + "INNER JOIN users ON bookings.user_id = users.id "
         + "INNER JOIN classes ON bookings.class_id = classes.class_id "
@@ -72,8 +75,9 @@ export async function getByUserID(userID) {
                     bookingResult.last_name,
                     bookingResult.class_date,
                     bookingResult.class_time,
-                    bookingResult.activity_name,
                     bookingResult.location_name,
+                    bookingResult.activity_name,
+                    bookingResult.activity_duration_minute
                 )
             )
         )
