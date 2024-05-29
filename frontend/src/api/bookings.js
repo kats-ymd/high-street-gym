@@ -49,9 +49,9 @@ export async function create(booking, authenticationKey) {
         }
     )
 
-    const postUserResult = await response.json()
+    const postBookingResult = await response.json()
 
-    return postUserResult
+    return postBookingResult
 }
 
 export async function deleteByID(bookingID, authenticationKey) {
