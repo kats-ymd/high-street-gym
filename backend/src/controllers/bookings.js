@@ -56,25 +56,11 @@ bookingController.get("/:id", auth(["admin", "trainer", "customer"]), async (req
             message: "Error: " + error,
         })
     })
-
-    // const bookings = await Bookings.getByUserID(userID)
-
-    // console.log(bookings)
-
-    // res.status(200).json({
-    //     status: 200,
-    //     message: "Get all classes",
-    //     bookings: bookings,
-    // })
-
 })
 
 bookingController.post("/", auth(["admin", "trainer", "customer"]), async (req, res) => {
     const bookingData = req.body.booking
 
-    // console.log("backend", bookingData)
-
-    // TODO: Input validation (prevent double booking)
     // check if same class ID already exists in the user's booking table
     const existingBookings = await Bookings.getByUserID(bookingData.userID)
     if (existingBookings.some(booking => booking.class_id == bookingData.classID)) {
@@ -83,13 +69,11 @@ bookingController.post("/", auth(["admin", "trainer", "customer"]), async (req, 
             message: "Failed to book: Same class has already been booked!"
         })
     }
-
-    console.log("existing bookings", existingBookings)
+    // console.log("existing bookings", existingBookings)
 
     // get the class_date, class_time, and activity_duration of the class being booked
     const classBeingBooked = await Classes.getByID(bookingData.classID)
-
-    console.log("class being booked", classBeingBooked)
+    // console.log("class being booked", classBeingBooked)
 
     function addMinutesToTime(time, minutesToAdd) {
         // breakdown time
@@ -110,8 +94,7 @@ bookingController.post("/", auth(["admin", "trainer", "customer"]), async (req, 
     // const classDate = new Date(classBeingBooked[0].class_date)
     const classStartTime = classBeingBooked[0].class_time
     const classEndTime = addMinutesToTime(classStartTime, classBeingBooked[0].activity_duration_minute)
-    // console.log(classDate)
-    console.log("class start time:", classStartTime, "class end time:", classEndTime)
+    // console.log("class start time:", classStartTime, "class end time:", classEndTime)
 
     const existingBookingsOnSameDate = existingBookings.filter(booking => {
         let bookingDate = new Date(booking.class_date);
@@ -119,7 +102,6 @@ bookingController.post("/", auth(["admin", "trainer", "customer"]), async (req, 
             bookingDate.getMonth() === classBeingBooked[0].class_date.getMonth() &&
             bookingDate.getDate() === classBeingBooked[0].class_date.getDate()
     })
-
     // console.log(existingBookingsOnSameDate)
 
     // check if the time of the class being booked overlaps with the class times of the existing bookings
@@ -133,21 +115,20 @@ bookingController.post("/", auth(["admin", "trainer", "customer"]), async (req, 
             // - its start time is later than existing booking's end time
             // - its end time is earlier than existing booking's start time
 
-            console.log("booking no problem!")
+            // console.log("booking no problem!")
 
-            // Bookings.create(bookingData).then(booking => {
-            //     res.status(200).json({
-            //         status: 200,
-            //         message: "Created booking",
-            //         booking: booking
-            //     })
-            // }).catch(error => {
-            //     res.status(500).json({
-            //         status: 500,
-            //         message: "Failed to create booking:" + error,
-            //     })
-            // })
-
+            Bookings.create(bookingData).then(booking => {
+                res.status(200).json({
+                    status: 200,
+                    message: "Created booking",
+                    booking: booking
+                })
+            }).catch(error => {
+                res.status(500).json({
+                    status: 500,
+                    message: "Failed to create booking:" + error,
+                })
+            })
         } else if ((classStartTime >= existingBookingStartTime && classStartTime < existingBookingEndTime)
             || (classEndTime > existingBookingStartTime && classEndTime <= existingBookingEndTime)
             || (classStartTime < existingBookingStartTime && classEndTime > existingBookingEndTime)) {
@@ -157,7 +138,7 @@ bookingController.post("/", auth(["admin", "trainer", "customer"]), async (req, 
             // c) its start time is earlier than existing booking's start time
             //  & its end time is later than existing booking's end time
 
-            console.log("Failed to book: New class time overlaps with existing class bookings")
+            // console.log("Failed to book: New class time overlaps with existing class bookings")
 
             return res.status(400).json({
                 status: 400,
