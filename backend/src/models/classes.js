@@ -112,6 +112,26 @@ export async function getByDateRange(startDate, endDate) {
         ))
 }
 
+export async function getByID(classID) {
+    const [classResult] = await db.query(
+        "SELECT * FROM classes "
+        // + "INNER JOIN locations ON classes.location_id = locations.location_id "
+        + "INNER JOIN activities ON classes.activity_id = activities.activity_id "
+        // + "INNER JOIN users ON classes.trainer_user_id = users.id "
+        + "WHERE classes.class_id = ?",
+        classID
+    )
+
+    console.log(classResult)
+
+    return await classResult.map(result => ({
+        class_id: result.class_id,
+        class_date: result.class_date,
+        class_time: result.class_time,
+        activity_duration_minute: result.activity_duration_minute,
+    }))
+}
+
 export async function getByTrainerUserID(trainerUserID) {
     const [allClasses] = await db.query(
         "SELECT * FROM classes "
