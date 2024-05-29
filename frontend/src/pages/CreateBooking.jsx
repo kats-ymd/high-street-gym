@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Link, useNavigate, useParams, useLocation } from "react-router-dom"
+import { useNavigate, useParams, useLocation } from "react-router-dom"
 import { useAuthentication } from "../hooks/authentication"
 import * as Classes from "../api/classes"
 import * as Bookings from "../api/bookings"
@@ -21,6 +21,7 @@ function CreateBooking () {
     })
     const [loading, setLoading] = useState(true)
     const [selectedOption, setSelectedOption] = useState('')
+    const [statusMessage, setStatusMessage] = useState('')
 
     useEffect(() => {
         if (user) {
@@ -71,12 +72,16 @@ function CreateBooking () {
         // console.log("frontend", bookingData)
 
         Bookings.create(bookingData, user.authenticationKey).then(result => {
-            // setStatusMessage(result.message)
-            setFormData({
-                userID: "",
-                classID: ""
-            })
-            navigate("/bookings")
+            if (result.status == 200) {
+                setStatusMessage(result.message)
+                setFormData({
+                    userID: "",
+                    classID: ""
+                })
+                navigate("/bookings")
+            } else {
+                setStatusMessage(result.message)
+            }
         })
     }
 
@@ -130,8 +135,9 @@ function CreateBooking () {
                     type="submit"
                     onClick={handleBookingOnClick}
                     className="btn">Book</button>
-                <Link to="/timetable" className="btn btn-ghost">Back</Link>
+                <button onClick={() => navigate("/timetable")} className="btn btn-ghost">Back</button>
             </div>
+            <span className="label-text-alt">{statusMessage}</span>
         </form>
     </>
 }
