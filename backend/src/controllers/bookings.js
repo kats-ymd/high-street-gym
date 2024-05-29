@@ -76,27 +76,95 @@ bookingController.post("/", auth(["admin", "trainer", "customer"]), async (req, 
 
     // TODO: Input validation (prevent double booking)
     // check if same class ID already exists in the user's booking table
-    const existingBooking = await Bookings.getByUserID(bookingData.userID)
-    if (existingBooking.some(booking => booking.class_id == bookingData.classID)) {
+    const existingBookings = await Bookings.getByUserID(bookingData.userID)
+    if (existingBookings.some(booking => booking.class_id == bookingData.classID)) {
         return res.status(400).json({
             status: 400,
-            message: "Oops, same class has already been booked!"
+            message: "Failed to book: Same class has already been booked!"
         })
     }
 
-    Bookings.create(bookingData).then(booking => {
-        res.status(200).json({
-            status: 200,
-            message: "Created booking",
-            booking: booking
-        })
-    }).catch(error => {
-        res.status(500).json({
-            status: 500,
-            message: "Failed to create booking:" + error,
-        })
+    console.log("existing bookings", existingBookings)
+
+    // get the class_date, class_time, and activity_duration of the class being booked
+    const classBeingBooked = await Classes.getByID(bookingData.classID)
+
+    console.log("class being booked", classBeingBooked)
+
+    function addMinutesToTime(time, minutesToAdd) {
+        // breakdown time
+        const [hours, minutes, seconds] = time.split(':').map(Number);
+
+        // Dateオブジェクトを作成します（年、月、日は任意で、時間だけが重要です）
+        // UTCを使用してDateオブジェクトを作成します（ローカルタイムゾーンに影響されないように）
+        const date = new Date(Date.UTC(2000, 0, 1, hours, minutes, seconds));
+
+        // 分を追加します
+        date.setUTCMinutes(date.getUTCMinutes() + minutesToAdd);
+
+        // 新しい時間をHH:MM:SS形式で返します
+        return date.toISOString().substr(11, 8);
+    }
+
+    // set the start time & end time of the class being booked
+    // const classDate = new Date(classBeingBooked[0].class_date)
+    const classStartTime = classBeingBooked[0].class_time
+    const classEndTime = addMinutesToTime(classStartTime, classBeingBooked[0].activity_duration_minute)
+    // console.log(classDate)
+    console.log("class start time:", classStartTime, "class end time:", classEndTime)
+
+    const existingBookingsOnSameDate = existingBookings.filter(booking => {
+        let bookingDate = new Date(booking.class_date);
+        return bookingDate.getFullYear() === classBeingBooked[0].class_date.getFullYear() &&
+            bookingDate.getMonth() === classBeingBooked[0].class_date.getMonth() &&
+            bookingDate.getDate() === classBeingBooked[0].class_date.getDate()
     })
 
+    // console.log(existingBookingsOnSameDate)
+
+    // check if the time of the class being booked overlaps with the class times of the existing bookings
+    for (let i = 0; i < existingBookingsOnSameDate.length; i++) {
+        const existingBookingStartTime = existingBookingsOnSameDate[i].class_time
+        const existingBookingEndTime = addMinutesToTime(existingBookingStartTime, existingBookingsOnSameDate[i].activity_duration_minute)
+        console.log(i, existingBookingsOnSameDate[i], existingBookingStartTime, existingBookingEndTime)
+
+        if (classStartTime >= existingBookingEndTime || classEndTime <= existingBookingStartTime) {
+            // OK to book new class if:
+            // - its start time is later than existing booking's end time
+            // - its end time is earlier than existing booking's start time
+
+            console.log("booking no problem!")
+
+            // Bookings.create(bookingData).then(booking => {
+            //     res.status(200).json({
+            //         status: 200,
+            //         message: "Created booking",
+            //         booking: booking
+            //     })
+            // }).catch(error => {
+            //     res.status(500).json({
+            //         status: 500,
+            //         message: "Failed to create booking:" + error,
+            //     })
+            // })
+
+        } else if ((classStartTime >= existingBookingStartTime && classStartTime < existingBookingEndTime)
+            || (classEndTime > existingBookingStartTime && classEndTime <= existingBookingEndTime)
+            || (classStartTime < existingBookingStartTime && classEndTime > existingBookingEndTime)) {
+            // NG to book new class if:
+            // a) its start time is between existing booking's start time & end time
+            // b) its end time is between existing booking's start time & end time
+            // c) its start time is earlier than existing booking's start time
+            //  & its end time is later than existing booking's end time
+
+            console.log("Failed to book: New class time overlaps with existing class bookings")
+
+            return res.status(400).json({
+                status: 400,
+                message: "Failed to book: New class time overlaps with existing class bookings"
+            })
+        }
+    }
 })
 
 bookingController.delete("/:id", auth(["admin", "trainer", "customer"]), async (req, res) => {
@@ -107,12 +175,12 @@ bookingController.delete("/:id", auth(["admin", "trainer", "customer"]), async (
     Bookings.deleteByID(bookingID).then(result => {
         res.status(200).json({
             status: 200,
-            message: "Booking deleted",
+            message: "Deleted booking",
         })
     }).catch(error => {
         res.status(500).json({
             status: 500,
-            message: "Failed to delete booking",
+            message: "Failed to delete booking:" + error,
         })
     })
 })
