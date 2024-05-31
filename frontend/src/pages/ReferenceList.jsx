@@ -1,37 +1,81 @@
 import { useEffect, useState } from "react"
 import { useAuthentication } from "../hooks/authentication"
-import * as Bookings from "../api/bookings"
+import * as Activities from "../api/activities"
+import * as Locations from "../api/locations"
+import * as Users from "../api/users"
 import LoadingSpinner from "../components/LoadingSpinner"
 
 function ReferenceList () {
-    // const [user, , , ] = useAuthentication()
+    const [user, , , ] = useAuthentication()
 
-    // const [statusMessage, setStatusMessage] = useState("")
+    const [statusMessage, setStatusMessage] = useState("")
+    const [loading, setLoading] = useState(true)
 
-    // // Load classes
-    // const [allBookings, setAllBookings] = useState([])
-    // const [allClasses, setAllClasses] = useState([])
-    // const [loading, setLoading] = useState(true)
+    // Load activities
+    const [allActivities, setAllActivities] = useState([])
+    useEffect(() => {
+        if (user) {
+            Activities.getAll(user.authenticationKey).then(results => {
+                setAllActivities(results.activity)
+                setStatusMessage(results.message)
+                setLoading(false)
+            })
+            .catch((error) => {
+                console.error("Error fetching activities:", error)
+                setStatusMessage("Error fetching activities:" + error)
+                setAllActivities([])
+                setLoading(false)
+            })
+        }
+    }, [user])
 
-    // useEffect(() => {
-    //     if (user) {
-    //         Bookings.getByUserID(user.id, user.authenticationKey).then(results => {
-    //             setAllBookings(results.bookings)
-    //             setAllClasses(results.classes)
-    //             setStatusMessage(results.message)
-    //             setLoading(false)
+    // Load locations
+    const [allLocations, setAllLocations] = useState([])
+    useEffect(() => {
+        if (user) {
+            Locations.getAll(user.authenticationKey).then(results => {
+                setAllLocations(results.location)
+                setStatusMessage(results.message)
+                setLoading(false)
+            })
+            .catch((error) => {
+                console.error("Error fetching locations:", error)
+                setStatusMessage("Error fetching locations:" + error)
+                setAllActivities([])
+                setLoading(false)
+            })
+        }
+    }, [user])
 
-    //             console.log(results.bookings)
-    //             console.log(results.classes)
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error fetching bookings:", error)
-    //             setStatusMessage("Error fetching bookings:" + error)
-    //             setAllBookings([])
-    //             setLoading(false)
-    //         })
-    //     }
-    // }, [user])
+    // Load trainers
+    const [allTrainers, setAllTrainers] = useState([])
+    useEffect(() => {
+        if (user) {
+            Users.getByRole("trainer", user.authenticationKey).then(results => {
+                setAllTrainers(results.user)
+                setStatusMessage(results.message)
+                setLoading(false)
+            })
+            .catch((error) => {
+                console.error("Error fetching bookings:", error)
+                setStatusMessage("Error fetching bookings:" + error)
+                setAllTrainers([])
+                setLoading(false)
+            })
+        }
+    }, [user])
+
+    useEffect(() => {
+        if (allTrainers.length > 0) {
+            console.log(allTrainers)
+        }
+        if (allActivities.length > 0) {
+            console.log(allActivities)
+        }
+        if (allLocations.length > 0) {
+            console.log(allLocations)
+        }
+    }, [allTrainers, allActivities, allLocations])
 
     // function handleCancelOnClick (booking) {
     //     console.log(booking.booking_id)
@@ -70,54 +114,43 @@ function ReferenceList () {
     //     }
     // }
 
-    // return loading ? <LoadingSpinner /> :
-    //     allClasses ? <>
-    //         <div className="flex flex-col">
-    //             <h1 className="text-2xl">Your scheduled classes as trainer:</h1>
-    //             {allClasses.map((eachBooking) =>
-    //                 <div key={eachBooking.class_id} className="border-t-2 border-dashed border-gray-400 py-2">
-    //                     <div className="flex justify-between">
-    //                         <span className="">{eachBooking.activity_name}</span>
-    //                     </div>
-    //                     <div className="flex justify-between">
-    //                         <span>@{eachBooking.location_name}</span>
-    //                         <span>on {new Date(eachBooking.class_date).toLocaleDateString()} {eachBooking.class_time}</span>
-    //                     </div>
-    //                 </div>
-    //             )}
-    //         </div>
-    //     </>
-    //     : !allBookings ? <>
-    //         <div className="text-2xl">You have no classes booked yet!</div>
-    //     </>
-    //     : <>
-    //         <div className="flex flex-col">
-    //             <h1 className="text-2xl">Your current class bookings:</h1>
-    //             <span className="label-text-alt">{statusMessage}</span>
-    //             {allBookings.map((eachBooking) =>
-    //                 <div key={eachBooking.booking_id} className="border-t-2 border-dashed border-gray-400 py-2">
-    //                     <div className="flex justify-between">
-    //                         <span className="basis-1/3">{eachBooking.activity_name}</span>
-    //                         <span className="basis-1/3">with {eachBooking.trainer_first_name} {eachBooking.trainer_last_name}</span>
-    //                         <button
-    //                             onClick={() => handleCancelOnClick(eachBooking)}
-    //                             className="basis-1/3 text-end text-red-600"
-    //                         >
-    //                             Cancel X
-    //                         </button>
-    //                     </div>
-    //                     <div className="flex justify-between">
-    //                         <span>@{eachBooking.location_name}</span>
-    //                         <span>on {new Date(eachBooking.class_date).toLocaleDateString()} {eachBooking.class_time}</span>
-    //                     </div>
-    //                 </div>
-    //             )}
-    //         </div>
-    //     </>
+    return loading ? <LoadingSpinner /> :
+        <>
+            <div className="flex flex-col">
+                <h1 className="text-2xl">Reference List</h1>
 
-    return <>
-        <h1>This is reference list page!</h1>
-    </>
+                <h2 className="text-xl">Activities</h2>
+                {allActivities.map((activity) =>
+                    <div key={activity.activity_id} className="border-t-2 border-dashed border-gray-400 py-2">
+                        <div className="flex justify-between">
+                            <span className="basis-1/3">Activity ID: {activity.activity_id}</span>
+                            <span className="basis-1/3">{activity.activity_name}</span>
+                            <span className="basis-1/3">{activity.activity_duration_minute} min</span>
+                        </div>
+                    </div>
+                )}
+
+                <h2 className="text-xl">Locations</h2>
+                {allLocations.map((location) =>
+                    <div key={location.location_id} className="border-t-2 border-dashed border-gray-400 py-2">
+                        <div className="flex justify-between">
+                            <span className="basis-1/3">Location ID: {location.location_id}</span>
+                            <span className="basis-2/3">{location.location_name}</span>
+                        </div>
+                    </div>
+                )}
+
+                <h2 className="text-xl">Trainers</h2>
+                {allTrainers.map((trainer) =>
+                    <div key={trainer.id} className="border-t-2 border-dashed border-gray-400 py-2">
+                        <div className="flex justify-between">
+                            <span className="basis-1/3">Trainer ID: {trainer.id}</span>
+                            <span className="basis-2/3">{trainer.firstName} {trainer.lastName}</span>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </>
 }
 
 export default ReferenceList
