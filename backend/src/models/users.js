@@ -119,6 +119,33 @@ export async function getByAuthenticationKey(authenticationKey) {
     }
 }
 
+export async function getByRole(role) {
+    const [userResults] = await db.query(
+        "SELECT * FROM users WHERE role = ?",
+        role
+    )
+
+    if (userResults.length > 0) {
+        return await userResults.map((userResult) =>
+            newUser(
+                userResult.id.toString(),
+                userResult.email,
+                userResult.password,
+                userResult.role,
+                userResult.first_name,
+                userResult.last_name,
+                userResult.phone,
+                userResult.address,
+                userResult.authentication_key,
+            )
+        )
+    } else {
+        return Promise.reject("no results found")
+    }
+}
+
+// getByRole("admin").then(results => console.log(results))
+
 export async function create(user) {
     delete user.id
 

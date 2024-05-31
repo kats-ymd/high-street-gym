@@ -100,6 +100,23 @@ userController.get("/:id", auth(["admin", "trainer", "customer"]), (req, res) =>
     })
 })
 
+userController.get("/role/:role", auth(["admin", "trainer", "customer"]), (req, res) => {
+    const role = req.params.role
+
+    Users.getByRole(role).then(user => {
+        res.status(200).json({
+            status: 200,
+            message: "Get user by role",
+            user: user,
+        })
+    }).catch(error => {
+        res.status(500).json({
+            status: 500,
+            message: "Failed to get user by role",
+        })
+    })
+})
+
 userController.get("/authentication/:authenticationKey", (req, res) => {
     const authenticationKey = req.params.authenticationKey
 

@@ -89,6 +89,23 @@ export async function getByAuthenticationKey(authenticationKey) {
     return APIResponseObject.user
 }
 
+export async function getByRole(role, authenticationKey) {
+    const response = await fetch(
+        API_URL + "/users/role/" + role,
+        {
+            method: "GET",
+            headers: {
+                'Content-Type': "application/json",
+                'X-AUTH-KEY': authenticationKey
+            },
+        }
+    )
+
+    const APIResponseObject = await response.json()
+
+    return APIResponseObject
+}
+
 export async function update(user, authenticationKey) {
     const response = await fetch(
         API_URL + "/users/" + user.id,
