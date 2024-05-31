@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { useRef, useState } from "react"
 import { API_URL } from "../api/api"
 import { useAuthentication } from "../hooks/authentication";
@@ -19,6 +19,11 @@ function XmlImport({ /* onUploadSuccess,*/ uploadUrl, disabled = false }) {
 
     function uploadFile(e) {
         e.preventDefault()
+
+        if (uploadOption == "") {
+            setStatusMessage("Select import type from select box...")
+            return
+        }
 
         // Files is an array because the user could select multiple files
         // we choose to upload only the first selected file in this case.
@@ -49,10 +54,6 @@ function XmlImport({ /* onUploadSuccess,*/ uploadUrl, disabled = false }) {
                 setUploadOption("")
                 // clear the selected file
                 uploadInputRef.current.value = null
-                // // Notify of successful upload
-                // if (typeof onUploadSuccess === "function") {
-                //     onUploadSuccess()
-                // }
             })
             .catch(error => {
                 setStatusMessage("Upload failed - " + error)
@@ -60,8 +61,8 @@ function XmlImport({ /* onUploadSuccess,*/ uploadUrl, disabled = false }) {
     }
 
     function handleOnChange(e) {
-        console.log(e.target.value);
-        setUploadOption(e.target.value);
+        // console.log(e.target.value)
+        setUploadOption(e.target.value)
     }
 
     return <>
@@ -90,6 +91,7 @@ function XmlImport({ /* onUploadSuccess,*/ uploadUrl, disabled = false }) {
                 <label className="label">
                     <span className="label-text-alt">{statusMessage}</span>
                 </label>
+                <Link to={"/referenceList"} target="_blank" className="">Reference List</Link>
             </form>
         </div>
     </>

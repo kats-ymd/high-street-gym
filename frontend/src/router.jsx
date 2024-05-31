@@ -3,6 +3,7 @@ import { RestrictedRoute } from "./components/RestrictedRoute"
 import Login from "./pages/Login"
 import Timetable from "./pages/Timetable"
 import XmlImport from "./pages/XmlImport"
+import ReferenceList from "./pages/ReferenceList"
 import Blog from "./pages/Blog"
 import Signup from "./pages/Signup"
 import CreateBooking from "./pages/CreateBooking"
@@ -24,6 +25,11 @@ const router = createBrowserRouter(
                 <Route path='import' element={
                     <RestrictedRoute allowedRoles={["admin", "trainer"]}>
                         <XmlImport />
+                    </RestrictedRoute>
+                }></Route>
+                <Route path='referenceList' element={
+                    <RestrictedRoute allowedRoles={["admin", "trainer"]}>
+                        <ReferenceList />
                     </RestrictedRoute>
                 }></Route>
                 <Route path='blog' element={<Blog />}></Route>
