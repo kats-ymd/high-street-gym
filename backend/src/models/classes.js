@@ -1,5 +1,5 @@
 import { db } from "../database.js"
-import { convertToMySQLDate } from "../database.js"
+// import { convertToMySQLDate } from "../database.js"
 
 export function newClass(
     class_id,
@@ -62,7 +62,6 @@ export async function getAll() {
         + "ORDER BY class_date ASC"
     )
 
-    // return allClasses    // check what's returned
     return await allClasses.map((classResult) =>
         newClass(
             classResult.class_id.toString(),
@@ -92,7 +91,6 @@ export async function getByDateRange(startDate, endDate) {
         + "ORDER BY class_date ASC, class_time ASC"
     , [startDate, endDate])
 
-    // return allClasses    // check what's returned
     return await allClasses.map((classResult) =>
         newClass(
             classResult.class_id.toString(),
@@ -122,7 +120,7 @@ export async function getByID(classID) {
         classID
     )
 
-    console.log(classResult)
+    // console.log(classResult)
 
     return await classResult.map(result => ({
         class_id: result.class_id,
