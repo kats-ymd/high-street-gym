@@ -4,6 +4,7 @@ import { v4 as uuid4 } from "uuid"
 import xml2js from "xml2js"
 import * as Users from "../models/users.js";
 import auth from "../middleware/auth.js";
+import validator from "validator";
 
 // TODO: Implement input validation
 // TODO: Implement input sanitization
@@ -14,7 +15,21 @@ userController.post("/login", (req, res) => {
     // access request body
     let loginData = req.body
 
-    // TODO: Implement request validation
+    // Implement request validation
+    if (!/^[a-zA-Z0-9.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9]+$/.test(loginData.email)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid email address",
+        })
+        return
+    }
+    if (!/^[^\s]+$/.test(loginData.password)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid password: it cannot be empty or contain spaces",
+        })
+        return
+    }
 
     // console.log(loginData)
 
@@ -81,10 +96,14 @@ userController.get("/", auth(["admin"]), async (req, res) => {
 userController.get("/:id", auth(["admin", "trainer", "customer"]), (req, res) => {
     const userID = req.params.id
 
-    // TODO: Implement request validation
-
-    // TODO: Enforce that moderator and spotter users
-    // can only get them selves.
+    // Implement request validation
+    if (!/^[1-9]\d*$/.test(userID)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid request",
+        })
+        return
+    }
 
     Users.getByID(userID).then(user => {
         res.status(200).json({
@@ -102,6 +121,14 @@ userController.get("/:id", auth(["admin", "trainer", "customer"]), (req, res) =>
 
 userController.get("/role/:role", auth(["admin", "trainer", "customer"]), (req, res) => {
     const role = req.params.role
+
+    if (role != "admin" && role != "trainer" && role != "customer") {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid request",
+        })
+        return
+    }
 
     Users.getByRole(role).then(user => {
         res.status(200).json({
@@ -138,7 +165,56 @@ userController.post("/", auth(["admin"]), (req, res) => {
     // Get the user data out of the request
     const userData = req.body.user
 
-    // TODO: Implement request validation
+    // Implement request validation
+    if (userData.role != "admin" && userData.role != "trainer" && userData.role != "customer") {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid user role",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.-]+$/.test(userData.firstName)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid first name",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.-]+$/.test(userData.lastName)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid last name",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.-]+$/.test(userData.phone)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid phone number",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.,-\s]+$/.test(userData.address)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid address",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9]+$/.test(userData.email)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid email address",
+        })
+        return
+    }
+    if (!/^[^\s]+$/.test(userData.password)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid password: it cannot be empty or contain spaces",
+        })
+        return
+    }
 
     // hash the password if it isn't already hashed
     if (userData.password
@@ -185,7 +261,49 @@ userController.post("/register", (req, res) => {
     // Get the user data out of the request
     const userData = req.body
 
-    // TODO: Implement request validation
+    // Implement request validation
+    if (!/^[a-zA-Z0-9.-]+$/.test(userData.firstName)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid first name",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.-]+$/.test(userData.lastName)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid last name",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.-]+$/.test(userData.phone)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid phone number",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.,-\s]+$/.test(userData.address)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid address",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9]+$/.test(userData.email)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid email address",
+        })
+        return
+    }
+    if (!/^[^\s]+$/.test(userData.password)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid password: it cannot be empty or contain spaces",
+        })
+        return
+    }
 
     // hash the password
     userData.password = bcrypt.hashSync(userData.password, 10);
@@ -234,10 +352,56 @@ userController.patch("/:id", auth(["admin", "trainer", "customer"]), async (req,
     // Use ID passed in URL
     userData.id = userID
 
-    // TODO: Implement request validation
-
-    // TODO: Enforce that moderators and spotters can only
-    // update their own user records.
+    // Implement request validation
+    if (userData.role != "admin" && userData.role != "trainer" && userData.role != "customer") {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid user role",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.-]+$/.test(userData.firstName)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid first name",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.-]+$/.test(userData.lastName)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid last name",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.-]+$/.test(userData.phone)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid phone number",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.,-\s]+$/.test(userData.address)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid address",
+        })
+        return
+    }
+    if (!/^[a-zA-Z0-9.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9]+$/.test(userData.email)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid email address",
+        })
+        return
+    }
+    if (!/^[^\s]+$/.test(userData.password)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid password: it cannot be empty or contain spaces",
+        })
+        return
+    }
 
     // hash the password if it isn't already hashed
     if (userData.password

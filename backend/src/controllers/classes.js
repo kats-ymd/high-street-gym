@@ -3,6 +3,7 @@ import xml2js from "xml2js"
 import * as Classes from "../models/classes.js"
 import * as Users from "../models/users.js";
 import auth from "../middleware/auth.js";
+import validator from "validator";
 
 const classController = Router()
 
@@ -54,6 +55,14 @@ classController.get("/", auth(["admin", "trainer", "customer"]), async (req, res
 classController.get("/:activityID", auth(["admin", "trainer", "customer"]), async (req, res) => {
     const activityID = req.params.activityID
 
+    if (!/^[1-9]\d*$/.test(activityID)) {
+        res.status(400).json({
+            status: 400,
+            message: "Invalid request",
+        })
+        return
+    }
+
     const datesAndDays = await Classes.getDatesAndDaysByActivityID(activityID)
 
     // console.log("controller", datesAndDays)
@@ -84,13 +93,13 @@ classController.post("/upload-xml", auth(["admin", "trainer"]), (req, res) => {
             throw new Error(validationErrorMessage + "time format should be HH:MM")
         }
         if (!/^[1-9]\d*$/.test(classData.location.toString())) {
-            throw new Error(validationErrorMessage + "Invalid location ID specified. Refer to location list.")
+            throw new Error(validationErrorMessage + "Invalid location ID specified. Refer to location list for correct ID.")
         }
         if (!/^[1-9]\d*$/.test(classData.activity.toString())) {
-            throw new Error(validationErrorMessage + "Invalid activity ID specified. Refer to activity list.")
+            throw new Error(validationErrorMessage + "Invalid activity ID specified. Refer to activity list for correct ID.")
         }
         if (!/^[1-9]\d*$/.test(classData.trainer.toString())) {
-            throw new Error(validationErrorMessage + "Invalid trainer ID specified. Refer to trainer list.")
+            throw new Error(validationErrorMessage + "Invalid trainer ID specified. Refer to trainer list for correct ID.")
         }
     }
 
@@ -131,7 +140,7 @@ classController.post("/upload-xml", auth(["admin", "trainer"]), (req, res) => {
                             }
                         }).then(classModel => {
                             // Return the promise of each creation query
-                            // return Classes.create(classModel)
+                            return Classes.create(classModel)
                         })
                     })).then(results => {
                         res.status(200).json({
