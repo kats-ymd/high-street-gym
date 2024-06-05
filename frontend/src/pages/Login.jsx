@@ -19,10 +19,15 @@ function Login() {
         e.preventDefault()
         setStatusMessage("Logging in...")
 
-        if (!/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$/.test(formData.email)) {
-            setStatusMessage("Invalid email address")
-            return
-        }
+        // // input validation
+        // if (!/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$/.test(formData.email)) {
+        //     setStatusMessage("Invalid email address")
+        //     return
+        // }
+        // if (!/^[^\s]+$/.test(formData.password)) {
+        //     setStatusMessage("Invalid password: it cannot be empty or contain spaces")
+        //     return
+        // }
 
         login(formData.email, formData.password)
             .then(result => {
@@ -35,7 +40,7 @@ function Login() {
     }
 
     return <>
-        <div>
+        <div className="mx-4">
             {/* <h1 className="text-2xl">This is the login page!</h1> */}
             <img src={logo} alt="logo image" className="w-40 my-4 mx-auto" />
             <form className="flex flex-col gap-y-2" onSubmit={onLoginSubmit}>
@@ -53,14 +58,14 @@ function Login() {
                     value={formData.password}
                     onChange={(e) => setFormData(existing => { return { ...existing, password: e.target.value } })}
                 />
-                <div>
-                    <button className="btn">Login</button>
-                    <Link to="/signup" className="btn btn-ghost">Signup</Link>
+                <div className="flex flex-wrap">
+                    <button className="btn flex-grow">Login</button>
+                    <Link to="/signup" className="btn btn-ghost flex-grow">Signup</Link>
                 </div>
-                <span className="text-red-600">{statusMessage}</span>
+                <span className="text-base text-red-600">{statusMessage}</span>
 
-                <div className="bg-pink-200 rounded-2xl mt-8">
-                    {/* This section is included for debugging and development purposes */}
+                {/* Following section is included for debugging and development purposes */}
+                <div className="bg-pink-200 rounded-xl mt-8">
                     <h2>DEV ONLY - Quick Login</h2>
                     <table className="table table-compact w-full">
                         <thead>

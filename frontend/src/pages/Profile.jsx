@@ -79,14 +79,14 @@ function Profile ({ userID, onSave, allowEditRole }) {
     }
 
     return <>
-        <div>
-            <h1 className="text-2xl">User Profile</h1>
+        <div className="mx-4">
+            {/* <h1 className="text-2xl pb-2">User Profile</h1> */}
             <img
                 src={profile}
                 alt="user image placeholder"
                 className="w-40 my-4 mx-auto"
             />
-            <form className="flex flex-col gap-y-2">
+            <form className="flex flex-col gap-y-2 px-2">
                 <input
                     type="text"
                     placeholder="First Name"
@@ -129,19 +129,20 @@ function Profile ({ userID, onSave, allowEditRole }) {
                     value={formData.password}
                     onChange={(e) => setFormData(existing => { return { ...existing, password: e.target.value } })}
                 />
-                {/* TODO: showing hashed password may be NG, if "update" again, the saved password would be changed unexpectedly */}
-                <div>
+                <div className="flex flex-wrap">
                     <input
                         type="button"
                         value={formData.id ? "Update" : "Insert"}
                         onClick={() => upsert()}
-                        className="btn btn-primary mr-2"
+                        className="basis-1/2 btn"
                     />
-                    <button onClick={() => navigate("/bookings")} className="btn btn-ghost">Cancel</button>
+                    <button
+                        onClick={() => navigate("/bookings")}
+                        className="basis-1/2 btn btn-ghost">Cancel</button>
                     {/* TODO: maybe change function to go back to the previous page instead of bookings page */}
                 </div>
                 <label className="label">
-                    <span className="label-text-alt">{statusMessage}</span>
+                    <span className="text-base text-red-600">{statusMessage}</span>
                 </label>
             </form>
         </div>

@@ -72,46 +72,56 @@ function ViewBookings () {
 
     return loading ? <LoadingSpinner /> :
         allClasses ? <>
-            <div className="flex flex-col">
-                <h1 className="text-2xl">Your scheduled classes as trainer:</h1>
-                {allClasses.map((eachBooking) =>
-                    <div key={eachBooking.class_id} className="border-t-2 border-dashed border-gray-400 py-2">
-                        <div className="flex justify-between">
-                            <span className="">{eachBooking.activity_name}</span>
+            <div className="mx-1">
+                <h1 className="text-2xl pb-2">Your scheduled classes as trainer:</h1>
+                <div className="flex flex-col">
+                    {allClasses.map((eachBooking) =>
+                        <div key={eachBooking.class_id} className="border-t-2 border-dashed border-gray-400 py-2">
+                            <div className="flex justify-between">
+                                <span className="">{eachBooking.activity_name}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>@{eachBooking.location_name}</span>
+                                <span>on {new Date(eachBooking.class_date).toLocaleDateString()} {eachBooking.class_time}</span>
+                            </div>
                         </div>
-                        <div className="flex justify-between">
-                            <span>@{eachBooking.location_name}</span>
-                            <span>on {new Date(eachBooking.class_date).toLocaleDateString()} {eachBooking.class_time}</span>
-                        </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </>
         : !allBookings ? <>
-            <div className="text-2xl">You have no classes booked yet!</div>
+            <div className="text-2xl pb-2">You have no classes booked yet!</div>
         </>
         : <>
-            <div className="flex flex-col">
-                <h1 className="text-2xl">Your current class bookings:</h1>
-                <span className="label-text-alt">{statusMessage}</span>
-                {allBookings.map((eachBooking) =>
-                    <div key={eachBooking.booking_id} className="border-t-2 border-dashed border-gray-400 py-2">
-                        <div className="flex justify-between">
-                            <span className="basis-1/3">{eachBooking.activity_name}</span>
-                            <span className="basis-1/3">with {eachBooking.trainer_first_name} {eachBooking.trainer_last_name}</span>
-                            <button
-                                onClick={() => handleCancelOnClick(eachBooking)}
-                                className="basis-1/3 text-end text-red-600"
-                            >
-                                Cancel X
-                            </button>
+            <div className="mx-1">
+                <h1 className="text-2xl pb-2">Your current class bookings:</h1>
+                <div className="flex flex-col px-1">
+                    {/* <span className="text-base text-red-600">{statusMessage}</span> */}
+                    {allBookings.map((eachBooking) =>
+                        <div key={eachBooking.booking_id} className="border-t-2 border-dashed border-gray-400 py-2">
+                            <div className="flex justify-between items-center">
+                                <span className="basis-2/5 text-2xl">
+                                    {eachBooking.activity_name}
+                                </span>
+                                <span className="basis-2/5">
+                                    with {eachBooking.trainer_first_name} {eachBooking.trainer_last_name}
+                                </span>
+                                <div className="basis-1/5 text-end">
+                                    <button
+                                        onClick={() => handleCancelOnClick(eachBooking)}
+                                        className="btn-ghost text-red-600 px-1 rounded-md"
+                                    >
+                                        Cancel X
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="flex">
+                                <span className="basis-2/5">@{eachBooking.location_name}</span>
+                                <span className="basis-2/5">on {new Date(eachBooking.class_date).toLocaleDateString()} {eachBooking.class_time.slice(0, -3)}</span>
+                            </div>
                         </div>
-                        <div className="flex justify-between">
-                            <span>@{eachBooking.location_name}</span>
-                            <span>on {new Date(eachBooking.class_date).toLocaleDateString()} {eachBooking.class_time}</span>
-                        </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </>
 }

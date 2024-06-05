@@ -116,39 +116,55 @@ function ReferenceList () {
 
     return loading ? <LoadingSpinner /> :
         <>
-            <div className="flex flex-col">
+            <div className="flex flex-col mx-1">
                 <h1 className="text-2xl">Reference List</h1>
-
-                <h2 className="text-xl">Activities</h2>
-                {allActivities.map((activity) =>
-                    <div key={activity.activity_id} className="border-t-2 border-dashed border-gray-400 py-2">
-                        <div className="flex justify-between">
-                            <span className="basis-1/3">Activity ID: {activity.activity_id}</span>
-                            <span className="basis-1/3">{activity.activity_name}</span>
-                            <span className="basis-1/3">{activity.activity_duration_minute} min</span>
-                        </div>
+                <div className="px-4 py-2">
+                    <h2 className="text-xl">Trainers</h2>
+                    <div className="flex justify-between">
+                        <span className="basis-1/4 text-center">ID</span>
+                        <span className="basis-3/4">Trainer</span>
                     </div>
-                )}
-
-                <h2 className="text-xl">Locations</h2>
-                {allLocations.map((location) =>
-                    <div key={location.location_id} className="border-t-2 border-dashed border-gray-400 py-2">
-                        <div className="flex justify-between">
-                            <span className="basis-1/3">Location ID: {location.location_id}</span>
-                            <span className="basis-2/3">{location.location_name}</span>
+                    {allTrainers.map((trainer) =>
+                        <div key={trainer.id} className="border-t-2 border-dashed border-gray-400 py-2">
+                            <div className="flex justify-between">
+                                <span className="basis-1/4 text-center">{trainer.id}</span>
+                                <span className="basis-3/4">{trainer.firstName} {trainer.lastName}</span>
+                            </div>
                         </div>
+                    )}
+                </div>
+                <div className="px-4 py-2">
+                    <h2 className="text-xl">Activities</h2>
+                    <div className="flex justify-between">
+                        <span className="basis-1/4 text-center">ID</span>
+                        <span className="basis-2/4">Activity</span>
+                        <span className="basis-1/4">Duration</span>
                     </div>
-                )}
-
-                <h2 className="text-xl">Trainers</h2>
-                {allTrainers.map((trainer) =>
-                    <div key={trainer.id} className="border-t-2 border-dashed border-gray-400 py-2">
-                        <div className="flex justify-between">
-                            <span className="basis-1/3">Trainer ID: {trainer.id}</span>
-                            <span className="basis-2/3">{trainer.firstName} {trainer.lastName}</span>
+                    {allActivities.map((activity) =>
+                        <div key={activity.activity_id} className="border-t-2 border-dashed border-gray-400 py-2">
+                            <div className="flex justify-between">
+                                <span className="basis-1/4 text-center">{activity.activity_id}</span>
+                                <span className="basis-2/4">{activity.activity_name}</span>
+                                <span className="basis-1/4">{activity.activity_duration_minute} min</span>
+                            </div>
                         </div>
+                    )}
+                </div>
+                <div className="px-4 py-2">
+                    <h2 className="text-xl">Locations</h2>
+                    <div className="flex justify-between">
+                        <span className="basis-1/4 text-center">ID</span>
+                        <span className="basis-3/4">Location</span>
                     </div>
-                )}
+                    {allLocations.map((location) =>
+                        <div key={location.location_id} className="border-t-2 border-dashed border-gray-400 py-2">
+                            <div className="flex justify-between">
+                                <span className="basis-1/4 text-center">{location.location_id}</span>
+                                <span className="basis-3/4">{location.location_name}</span>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </>
 }

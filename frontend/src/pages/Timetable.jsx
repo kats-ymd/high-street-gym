@@ -31,29 +31,60 @@ function Timetable () {
     }, [user])
 
     function handleOnClick(classDate, activity) {
-        navigate(`/createBooking/${activity.activity_id}`, { state: { classDate: classDate, activity: activity } })
-        // console.log(classDate, activity)
+        if (user.role == "trainer") {
+            window.alert(`Class booking is only for customers, not for trainers`)
+            return
+        } else {
+            navigate(
+                `/createBooking/${activity.activity_id}`,
+                { state: { classDate: classDate, activity: activity } }
+            )
+            // console.log(classDate, activity)
+        }
     }
 
     return loading ? <LoadingSpinner /> : <>
-        <h1 className="text-2xl">Currently offered classes:</h1>
-        <form className="flex flex-col">
-            {allClassDatesAndDays.map((eachClassDate, index) =>
-                <div key={eachClassDate.class_date}>
-                    <div className="border border-black flex justify-between">
-                        <span className="mx-2">{eachClassDate.class_day}</span>
-                        <span className="mx-2">{new Date(eachClassDate.class_date).toLocaleDateString()}</span>
-                    </div>
-
-                    {activitiesOfDay[index].map((activities) =>
-                        <div key={activities.activity_id} className="columns-2 flex justify-between">
-                            <span>{activities.activity_name}</span>
-                            <button onClick={() => handleOnClick(eachClassDate, activities)} className="text-blue-600">Book &gt;</button>
+        <div className="mx-1">
+            <h1 className="text-2xl pb-2">Currently offered classes:</h1>
+            <form className="flex flex-col">
+                {allClassDatesAndDays.map((eachClassDate, index) =>
+                    <div
+                        key={eachClassDate.class_date}
+                        className="px-0.5 py-1"
+                    >
+                        <div
+                            className="
+                                border
+                                border-black
+                                flex
+                                justify-between
+                            ">
+                            <span className="mx-1">{eachClassDate.class_day}</span>
+                            <span className="mx-1">{new Date(eachClassDate.class_date).toLocaleDateString()}</span>
                         </div>
-                    )}
-                </div>
-            )}
-        </form>
+
+                        {activitiesOfDay[index].map((activities) =>
+                            <div
+                                key={activities.activity_id}
+                                className="
+                                    columns-2
+                                    flex
+                                    justify-between
+                                    px-1.5
+                                ">
+                                <span>{activities.activity_name}</span>
+                                <button
+                                    onClick={() => handleOnClick(eachClassDate, activities)}
+                                    className="text-blue-600"
+                                >
+                                    Book &gt;
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </form>
+        </div>
     </>
 }
 

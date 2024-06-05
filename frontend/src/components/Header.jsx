@@ -1,15 +1,17 @@
 function Header() {
-    return <header 
+    return <header
         className="
-            h-16 
-            bg-base-300
-            text-center 
+            flex
+            justify-center
+            py-4
+            bg-base-200
+            text-center
             text-4xl"
     >
-        <span 
+        <span
             className="
-                align-middle 
-                font-bold 
+                font-bold
+                font-mono
                 text-red-600"
         >
             High Street Gym

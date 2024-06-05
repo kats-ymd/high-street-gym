@@ -38,37 +38,38 @@ function Signup () {
         e.preventDefault()
         setStatusMessage("Signing up...")
 
-        if (!/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$/.test(formData.email)) {
-            setStatusMessage("Invalid email address")
-            return
-        }
-
-        // TODO: Add validation for other fields
+        // if (!/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$/.test(formData.email)) {
+        //     setStatusMessage("Invalid email address")
+        //     return
+        // }
 
         // Register then attempt login
         Users.registerUser(formData)
             .then(result => {
                 setStatusMessage(result.message)
-                login(formData.email, formData.password)
-                    .then(result => {
-                        setStatusMessage(result.message)
-                        navigate("/profile")
-                    })
-                    .catch(error => {
-                        setStatusMessage("Login failed: " + error)
-                    })
+                // login(formData.email, formData.password)
+                //     .then(result => {
+                //         setStatusMessage(result.message)
+                //         navigate("/profile")
+                //     })
+                //     .catch(error => {
+                //         setStatusMessage("Login failed: " + error)
+                //     })
             })
     }
 
     return <>
-        <div>
+        <div className="mx-4">
             {/* <h1 className="text-2xl">Sign Up</h1> */}
             <img
                 src={profile}
                 alt="user image placeholder"
                 className="w-40 my-4 mx-auto"
             />
-            <form className="flex flex-col gap-y-2" onSubmit={onSignupSubmit}>
+            <form
+                className="flex flex-col gap-y-2 px-2"
+                onSubmit={onSignupSubmit}
+            >
                 <input
                     type="text"
                     placeholder="First Name"
@@ -111,12 +112,15 @@ function Signup () {
                     value={formData.password}
                     onChange={(e) => setFormData(existing => { return { ...existing, password: e.target.value } })}
                 />
-                <div>
-                    <button className="btn btn-primary mr-2">Sign Up!</button>
-                    <button onClick={() => navigate("/")} className="btn btn-ghost">Login</button>
+                <div className="flex flex-wrap">
+                    <button className="basis-1/2 btn">Sign Up!</button>
+                    <button
+                        onClick={() => navigate("/")}
+                        className="basis-1/2 btn btn-ghost"
+                    >Login</button>
                 </div>
                 <label className="label">
-                    <span className="label-text-alt">{statusMessage}</span>
+                    <span className="text-base text-red-600">{statusMessage}</span>
                 </label>
             </form>
         </div>

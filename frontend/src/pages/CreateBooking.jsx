@@ -54,7 +54,7 @@ function CreateBooking () {
 
     console.log(originallySelectedClass)
     // console.log(selectedClass)
-    // console.log(allDatesAndDays)
+    console.log(allDatesAndDays)
     console.log(allClasses)
 
     function handleSelectOnChange(e) {
@@ -69,9 +69,10 @@ function CreateBooking () {
             ...formData,
             userID: user.id,
         }
-        // console.log("frontend", bookingData)
+        console.log("frontend", bookingData)
 
         Bookings.create(bookingData, user.authenticationKey).then(result => {
+            console.log(result)
             if (result.status == 200) {
                 setStatusMessage(result.message)
                 setFormData({
@@ -86,59 +87,71 @@ function CreateBooking () {
     }
 
     return loading ? <LoadingSpinner /> : <>
-        <h1 className="text-2xl my-4">Create Booking</h1>
-        <span className="text-4xl">{originallySelectedClass.activity_name}</span>
-        <form
-            onSubmit={handleBookingOnClick}
-            className="flex flex-col my-4">
-            <select
-                value={selectedOption}
-                onChange={handleSelectOnChange}
-                className="select select-bordered"
-            >
-                {allDatesAndDays.map((datesAndDays) =>
-                    <optgroup
-                        key={datesAndDays.classDate}
-                        label={
-                            `${daysOfWeek[new Date(datesAndDays.classDate).getDay()]}`
-                            + ` - ` +
-                            `${new Date(datesAndDays.classDate).toLocaleDateString()}`
-                        }
-                        className=""
+        <div className="mx-1">
+            <h1 className="text-2xl pb-2">Create Booking</h1>
+            <p className="text-4xl font-bold text-center my-4">
+                {originallySelectedClass.activity_name}
+            </p>
+            <form
+                onSubmit={handleBookingOnClick}
+                className="flex flex-col gap-y-2">
+                <select
+                    value={selectedOption}
+                    onChange={handleSelectOnChange}
+                    className="select select-bordered"
+                >
+                    {allDatesAndDays.map((datesAndDays) =>
+                        <optgroup
+                            key={datesAndDays.classDate}
+                            label={
+                                `${daysOfWeek[new Date(datesAndDays.classDate).getDay()]}`
+                                + ` - ` +
+                                `${new Date(datesAndDays.classDate).toLocaleDateString()}`
+                            }
+                            className=""
+                        >
+                            {allClasses.map((classes, index) =>
+                                datesAndDays.classDate == classes.class_date &&
+                                <option
+                                    key={classes[index]}
+                                    value={classes.class_id}
+                                    className=""
+                                >
+                                    {/* {classes.class_id} -
+                                    &nbsp; */}
+                                    {daysOfWeek[new Date(datesAndDays.classDate).getDay()]}
+                                    &nbsp;
+                                    {new Date(classes.class_date).toLocaleDateString()}
+                                    &nbsp;
+                                    {classes.class_time.slice(0, -3)}
+                                    &nbsp;
+                                    @{classes.location_name}
+                                    &nbsp;
+                                    with {classes.trainer_first_name}
+                                </option>)
+                                // )
+                            }
+                        </optgroup>
+                    )}
+                </select>
+                <div className="flex flex-wrap">
+                    <button
+                        type="submit"
+                        onClick={handleBookingOnClick}
+                        className="btn flex-grow"
                     >
-                        {allClasses.map((classes, index) =>
-                            datesAndDays.classDate == classes.class_date &&
-                            <option
-                                key={classes[index]}
-                                value={classes.class_id}
-                                className="flex justify-between"
-                            >
-                                {classes.class_id} -
-                                &nbsp;
-                                {daysOfWeek[new Date(datesAndDays.classDate).getDay()]}
-                                &nbsp;&nbsp;
-                                {new Date(classes.class_date).toLocaleDateString()}
-                                &nbsp;&nbsp;
-                                {classes.class_time}
-                                &nbsp;&nbsp;
-                                @{classes.location_name}
-                                &nbsp;&nbsp;
-                                with {classes.trainer_first_name}
-                            </option>)
-                            // )
-                        }
-                    </optgroup>
-                )}
-            </select>
-            <div>
-                <button
-                    type="submit"
-                    onClick={handleBookingOnClick}
-                    className="btn">Book</button>
-                <button onClick={() => navigate("/timetable")} className="btn btn-ghost">Back</button>
-            </div>
-            <span className="label-text-alt">{statusMessage}</span>
-        </form>
+                        Book
+                    </button>
+                    <button
+                        onClick={() => navigate("/timetable")}
+                        className="btn btn-ghost flex-grow"
+                    >
+                        Back
+                    </button>
+                </div>
+                <span className="text-base text-red-600">{statusMessage}</span>
+            </form>
+        </div>
     </>
 }
 

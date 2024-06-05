@@ -66,8 +66,8 @@ function XmlImport({ /* onUploadSuccess,*/ uploadUrl, disabled = false }) {
     }
 
     return <>
-        <div>
-            <h1 className="text-2xl">XML Import</h1>
+        <div className="mx-4">
+            {/* <h1 className="text-2xl">XML Import</h1> */}
             <img src={upload} alt="upload to cloud icon" className="w-40 my-4 mx-auto" />
             <form className="flex flex-col gap-y-2" onSubmit={uploadFile}>
                 <select
@@ -84,14 +84,30 @@ function XmlImport({ /* onUploadSuccess,*/ uploadUrl, disabled = false }) {
                     type="file"
                     disabled={disabled}
                     className="file-input file-input-bordered" />
-                <div>
-                    <button disabled={disabled} className="btn">Save</button>
-                    <button onClick={() => navigate("/bookings")} className="btn btn-ghost">Cancel</button>
+                <div className="flex flex-wrap">
+                    <button
+                        disabled={disabled}
+                        className="btn flex-grow">Save</button>
+                    <button
+                        onClick={() => navigate("/bookings")}
+                        className="btn btn-ghost flex-grow">Cancel</button>
                 </div>
                 <label className="label">
-                    <span className="label-text-alt">{statusMessage}</span>
+                    <span className="text-base text-red-600">{statusMessage}</span>
                 </label>
-                <Link to={"/referenceList"} target="_blank" className="">Reference List</Link>
+                <div className="py-2">
+                    <ul className="list-disc list-inside">
+                        Please refer to the Reference List below for the following:
+                        <li className="px-4">Trainer ID</li>
+                        <li className="px-4">Activity ID</li>
+                        <li className="px-4">Location ID</li>
+                    </ul>
+                    <Link
+                        to={"/referenceList"}
+                        target="_blank"
+                        className="btn"
+                    >Reference List</Link>
+                </div>
             </form>
         </div>
     </>
