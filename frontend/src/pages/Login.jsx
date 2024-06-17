@@ -65,7 +65,7 @@ function Login() {
                 <span className="text-base text-red-600">{statusMessage}</span>
 
                 {/* Following section is included for debugging and development purposes */}
-                <div className="bg-pink-200 rounded-xl mt-8">
+                {/* <div className="bg-pink-200 rounded-xl mt-8">
                     <h2>DEV ONLY - Quick Login</h2>
                     <table className="table table-compact w-full">
                         <thead>
@@ -136,7 +136,7 @@ function Login() {
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div> */}
             </form>
         </div>
     </>
