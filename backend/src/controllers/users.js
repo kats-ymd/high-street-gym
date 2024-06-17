@@ -232,13 +232,13 @@ userController.post("/", auth(["admin"]), (req, res) => {
     // Convert the user data into an User model object
     const user = Users.newUser(
         null,
-        userData.email,
+        validator.escape(userData.email),
         userData.password,
-        userData.role,
-        userData.firstName,
-        userData.lastName,
-        userData.phone,
-        userData.address,
+        validator.escape(userData.role),
+        validator.escape(userData.firstName),
+        validator.escape(userData.lastName),
+        validator.escape(userData.phone),
+        validator.escape(userData.address),
         null
     )
 
@@ -314,13 +314,13 @@ userController.post("/register", (req, res) => {
     // Convert the user data into an User model object
     const user = Users.newUser(
         null,
-        userData.email,
+        validator.escape(userData.email),
         userData.password,
         "customer",
-        userData.firstName,
-        userData.lastName,
-        userData.phone,
-        userData.address,
+        validator.escape(userData.firstName),
+        validator.escape(userData.lastName),
+        validator.escape(userData.phone),
+        validator.escape(userData.address),
         null
     )
 
@@ -416,13 +416,13 @@ userController.patch("/:id", auth(["admin", "trainer", "customer"]), async (req,
     // Convert the user data into a User model object
     const user = Users.newUser(
         userData.id,
-        userData.email,
+        validator.escape(userData.email),
         userData.password,
-        userData.role,
-        userData.firstName,
-        userData.lastName,
-        userData.phone,
-        userData.address,
+        validator.escape(userData.role),
+        validator.escape(userData.firstName),
+        validator.escape(userData.lastName),
+        validator.escape(userData.phone),
+        validator.escape(userData.address),
         userData.authenticationKey
     )
 
