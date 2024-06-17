@@ -31,7 +31,7 @@ function Signup () {
             email: "",
             password: "",
         })
-        setStatusMessage("")
+        // setStatusMessage("")
     }
 
     function onSignupSubmit(e) {
@@ -47,6 +47,7 @@ function Signup () {
         Users.registerUser(formData)
             .then(result => {
                 setStatusMessage(result.message)
+                clear()
                 // login(formData.email, formData.password)
                 //     .then(result => {
                 //         setStatusMessage(result.message)
