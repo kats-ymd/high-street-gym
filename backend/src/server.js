@@ -55,5 +55,6 @@ app.use((err, req, res, next) => {
 // Start listening for API requests
 app.listen(
     port,
+    '0.0.0.0',
     () => console.log(`Express started on http://localhost:${port}`),
 )
