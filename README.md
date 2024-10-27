@@ -16,7 +16,7 @@
 ## Screenshots / Live Demo
 Screenshots - to be added shortly...
 
-[LIVE DEMO](https://gym.katsyamada.com/){:target="_blank"}
+![LIVE DEMO](https://gym.katsyamada.com/)
 
 
 ## Technologies Used
