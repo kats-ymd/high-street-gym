@@ -16,7 +16,7 @@
 ## Screenshots / Live Demo
 Screenshots - to be added shortly...
 
-[LIVE DEMO](#) - to be added shortly...
+[LIVE DEMO](https://gym.katsyamada.com/)
 
 
 ## Technologies Used
@@ -43,7 +43,7 @@ This application utilized various technologies and libraries in both the fronten
 
 - [cors](https://www.npmjs.com/package/cors): Middleware for enabling cross-origin resource sharing.
 
-- [dotenv]: Middleware for enabling use of .env file.
+- [dotenv](https://www.npmjs.com/package/dotenv): Middleware for enabling use of .env file.
 
 - [express-fileupload](https://www.npmjs.com/package/express-fileupload): Middleware for handling file uploads.
 
@@ -51,7 +51,7 @@ This application utilized various technologies and libraries in both the fronten
 
 - [uuid](https://www.npmjs.com/package/uuid): A library for generating UUIDs.
 
-- [validator]: A library for various input validation & sanitization.
+- [validator](https://www.npmjs.com/package/validator): A library for various input validation & sanitization.
 
 - [xml2js](https://www.npmjs.com/package/xml2js): A library for parsing XML data.
 
